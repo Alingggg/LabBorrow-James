@@ -118,7 +118,6 @@ The plan intentionally does not prescribe a package manager, UI component librar
 ### Administrator
 
 - manage school settings and operating hours;
-- manage resource categories;
 - create and update laboratories, rooms, and equipment;
 - create and view accounts;
 - assign application roles;
@@ -270,7 +269,6 @@ Existing non-Administrator accounts may remain stored, but they have no active a
 /admin/resources
 /admin/resources/new
 /admin/resources/[resourceId]/edit
-/admin/categories
 /admin/users
 /admin/settings
 ```
@@ -280,9 +278,8 @@ Do not expose reservation, approval, checkout, return, Faculty, Student, or Reso
 ### Administrator Capabilities
 
 - show totals for resources, unavailable resources, and account roles;
-- create and update resource categories;
 - create and update laboratories, rooms, and individual equipment records;
-- manage resource code, type, category, location, capacity, approval mode, access scope, maximum duration, and operational status;
+- manage resource name, description, type, and operational status;
 - view registered accounts and assign roles;
 - configure school name, timezone, contact information, address, and weekly operating hours; and
 - provide responsive navigation, loading, empty, validation, authorization, and unexpected-error states.
@@ -310,7 +307,7 @@ ROOM
 EQUIPMENT
 ```
 
-Equipment represents an individually tracked item with its own resource code and reservation schedule. Quantity-based inventory is not part of the initial scope.
+Equipment represents an individually tracked item with its own resource record and reservation schedule. Quantity-based inventory is not part of the initial scope.
 
 ### Approval Modes
 
@@ -321,6 +318,8 @@ APPROVAL_REQUIRED
 
 An eligible request for an auto-approved resource becomes confirmed immediately. An eligible request for a restricted resource begins pending review.
 
+Approval mode is added to resources in the Resource Staff milestone.
+
 ### Access Scopes
 
 ```text
@@ -329,6 +328,8 @@ FACULTY_STAFF
 ```
 
 `ALL_USERS` permits Students, Faculty, Resource Staff, and Administrators. `FACULTY_STAFF` excludes Students.
+
+Access scope is added to resources in the Faculty milestone.
 
 ### Resource Statuses
 
@@ -368,7 +369,7 @@ Condition is recorded at checkout and return for equipment reservations.
 
 ## 9. Suggested Database Model
 
-Introduce the schema milestone by milestone rather than creating tables for unfinished workflows. Milestone 1 contains the Better Auth tables and role column, facility settings, operating hours, resource categories, and resources. Reservations, status history, and equipment checkout tables are added by the later milestone that first uses them.
+Introduce the schema milestone by milestone rather than creating tables for unfinished workflows. Milestone 1 contains the Better Auth tables and role column, facility settings, operating hours, and resources. Reservations, status history, equipment checkout tables, and the reservation-policy columns on resources are added by the later milestone that first uses them.
 
 ### Better Auth Tables
 
@@ -407,38 +408,27 @@ is_closed
 
 There is at most one row per weekday. Open days require an opening time earlier than the closing time. Closed days do not retain an active time range.
 
-### resource_categories
-
-```text
-id
-name
-description
-created_at
-updated_at
-```
-
-Category names are unique.
-
 ### resources
 
 ```text
 id
-category_id
 name
-code
 description
 type
-location
-capacity
-approval_mode
-access_scope
-max_reservation_minutes
 status
 created_at
 updated_at
 ```
 
-Resource codes are unique. Capacity and maximum reservation duration must be positive.
+Resource names are unique.
+
+Later milestones extend this table:
+
+```text
+approval_mode              # Resource Staff milestone
+access_scope               # Faculty milestone
+max_reservation_minutes    # Faculty milestone; must be positive
+```
 
 ### reservations
 
@@ -494,14 +484,12 @@ Each eligible equipment reservation may have at most one checkout record.
 
 ## 10. Administrator Rules
 
-### Categories and Resources
+### Resources
 
-- category names and resource codes must remain unique;
-- resources must reference an existing category;
-- capacity and maximum duration must be positive;
+- resource names must remain unique;
 - retired resources cannot accept new requests;
 - status changes must not rewrite historical reservation records; and
-- deleting referenced categories or resources is avoided in favor of durable status changes.
+- deleting referenced resources is avoided in favor of durable status changes.
 
 ### Role Management
 
@@ -546,7 +534,7 @@ A new request must:
 - satisfy the resource access scope;
 - avoid an active reservation overlap for the same resource.
 
-Capacity describes the safe occupancy of a laboratory or room. It does not permit multiple simultaneous reservations for the same resource in the initial version.
+A resource accepts only one active reservation at a time in the initial version.
 
 All times are entered and displayed in the configured school timezone and stored in PostgreSQL as UTC timestamps.
 
@@ -604,7 +592,7 @@ Resource Staff
     may view operational resource schedules
 
 Administrator
-    may manage resources, categories, roles, and school settings
+    may manage resources, roles, and school settings
 ```
 
 Every Server Action and Route Handler must independently authenticate the session and authorize the requested operation.
@@ -715,7 +703,6 @@ Production concerns:
 - login, logout, protected routes, and Administrator authorization;
 - Administrator account creation;
 - Administrator overview summary;
-- resource category management;
 - laboratory, room, and equipment management;
 - user and role management;
 - school settings and operating hours; and
@@ -725,6 +712,8 @@ Do not expose other role workflows until this milestone is reviewed and accepted
 
 ### Milestone 2 — Resource Staff
 
+- resource approval mode;
+- reservation and status-history tables with database-level overlap protection;
 - pending-request review;
 - approval and rejection with reasons;
 - operational reservation views;
@@ -733,6 +722,7 @@ Do not expose other role workflows until this milestone is reviewed and accepted
 
 ### Milestone 3 — Faculty
 
+- resource access scope and maximum reservation duration;
 - authenticated resource catalog;
 - access to Faculty and Resource Staff resources;
 - reservation creation;
@@ -917,7 +907,7 @@ The first milestone is ready for review when:
 ✓ only approved Administrator routes are active
 ✓ sign-up is disabled and only an Administrator can create accounts
 ✓ non-Administrators cannot access Administrator pages or actions
-✓ categories and resources can be created and updated
+✓ resources can be created and updated
 ✓ account roles can be assigned safely
 ✓ the final Administrator cannot be demoted
 ✓ school settings and operating hours can be updated
