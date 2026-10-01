@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata } from "next"
 
-import { AuthForm } from "../_components/auth-form";
+import { AuthForm } from "./_components/AuthForm"
 
 export const metadata: Metadata = {
-  title: "Sign in | BookFlow",
-  description: "Sign in to your BookFlow account.",
-};
+  title: "Sign in",
+  description: "Sign in to your LabReserve account.",
+}
 
 export default function LoginPage() {
-  return <AuthForm mode="login" />;
+  return <AuthForm />
 }

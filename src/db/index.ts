@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { authRelations } from "@/db/schema";
+import { appRelations } from "@/db/schema";
 
 const databaseUrl = process.env.DATABASE_URL;
 
@@ -8,5 +8,5 @@ if (!databaseUrl) {
 }
 
 export const db = drizzle(databaseUrl, {
-  relations: authRelations,
+  relations: appRelations,
 });

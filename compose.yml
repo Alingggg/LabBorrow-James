@@ -1,14 +1,14 @@
 services:
   db:
-    image: postgres:latest
+    image: postgres:17
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: bookflow
+      POSTGRES_DB: labreserve
     ports:
       - 5432:5432
     volumes:
-      - db-data:/var/lib
+      - db-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s

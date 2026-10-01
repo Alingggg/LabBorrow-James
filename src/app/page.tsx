@@ -1,5 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function Home() {
-  redirect("/login");
+import { requireUser } from "@/lib/session";
+
+export default async function Home() {
+  const currentUser = await requireUser();
+
+  if (currentUser.role === "ADMIN") redirect("/admin");
+
+  return <main className="min-h-svh" />;
 }
