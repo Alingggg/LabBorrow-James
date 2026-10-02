@@ -4,8 +4,8 @@ import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { PageHeader } from "../_components/PageHeader"
-import { ResourceStatusBadge } from "../_components/ResourceStatusBadge"
+import { PageHeader } from "@/components/PageHeader"
+import { ResourceStatusBadge } from "./_components/ResourceStatusBadge"
 import { listResources } from "./data"
 
 export const metadata: Metadata = { title: "Manage resources" }

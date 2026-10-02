@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { PageHeader } from "../../_components/PageHeader"
+import { PageHeader } from "@/components/PageHeader"
 import { ResourceEditor } from "../_components/ResourceEditor"
 
 export const metadata: Metadata = { title: "Add resource" }

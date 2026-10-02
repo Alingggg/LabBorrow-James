@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { FlaskConical, ShieldCheck, UserRound } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { PageHeader } from "./_components/PageHeader"
+import { PageHeader } from "@/components/PageHeader"
 import { getAdminOverview } from "./data"
 
 export const metadata: Metadata = { title: "Administration" }

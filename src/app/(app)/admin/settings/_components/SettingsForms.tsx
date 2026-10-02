@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { updateFacilityAction } from "../actions"
-import { facilityInputSchema, type FacilityInput } from "../zod-schemas"
+import { facilityInputSchema, type FacilityInput } from "../schemas"
 import type { z } from "zod"
 
 const facilityFields: { name: keyof FacilityInput; label: string; type?: string; wide?: boolean }[] = [

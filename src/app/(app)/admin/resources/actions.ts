@@ -5,33 +5,22 @@ import { revalidatePath } from "next/cache"
 
 import { db } from "@/db"
 import { resources } from "@/db/schema"
-import { getSessionUser } from "@/lib/session"
-import { databaseErrorCode } from "@/lib/db-errors"
-import type { ActionResult } from "../types"
-import { resourceInputSchema, type ResourceInput } from "./zod-schemas"
+import { unexpectedError, validate } from "@/lib/action-helpers"
+import type { ActionResult } from "@/types/action-result"
+import { authorizeAdmin } from "@/data/auth"
+import { resourceInputSchema, type ResourceInput } from "./schemas"
 
 export async function saveResourceAction(
   values: ResourceInput
 ): Promise<ActionResult<{ id: string }>> {
   try {
-    const currentUser = await getSessionUser()
-    if (!currentUser) {
-      return { ok: false, code: "UNAUTHORIZED", message: "Sign in to continue." }
-    }
-    if (currentUser.role !== "ADMIN") {
-      return { ok: false, code: "FORBIDDEN", message: "Administrator access is required." }
-    }
+    const auth = await authorizeAdmin()
+    if ("failure" in auth) return auth.failure
 
-    const parsed = resourceInputSchema.safeParse(values)
-    if (!parsed.success) {
-      return {
-        ok: false,
-        code: "VALIDATION_ERROR",
-        message: "Please correct the highlighted fields.",
-        fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
-      }
-    }
-    const { id, ...fields } = parsed.data
+    const parsed = validate(resourceInputSchema, values)
+    if ("failure" in parsed) return parsed.failure
+    const { id, description, ...rest } = parsed.data
+    const fields = { ...rest, description: description || null }
 
     const [record] = id
       ? await db
@@ -48,18 +37,6 @@ export async function saveResourceAction(
     revalidatePath("/admin/resources")
     return { ok: true, data: record }
   } catch (error) {
-    if (databaseErrorCode(error) === "23505") {
-      return {
-        ok: false,
-        code: "CONFLICT",
-        message: "A resource with that name already exists.",
-      }
-    }
-    console.error(error)
-    return {
-      ok: false,
-      code: "DATABASE_ERROR",
-      message: "The request could not be completed. Please try again.",
-    }
+    return unexpectedError(error, "A resource with that name already exists.")
   }
 }

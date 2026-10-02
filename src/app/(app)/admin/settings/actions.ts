@@ -4,31 +4,20 @@ import { revalidatePath } from "next/cache"
 
 import { db } from "@/db"
 import { facilitySettings } from "@/db/schema"
-import { getSessionUser } from "@/lib/session"
-import type { ActionResult } from "../types"
-import { facilityInputSchema, type FacilityInput } from "./zod-schemas"
+import { unexpectedError, validate } from "@/lib/action-helpers"
+import type { ActionResult } from "@/types/action-result"
+import { authorizeAdmin } from "@/data/auth"
+import { facilityInputSchema, type FacilityInput } from "./schemas"
 
 export async function updateFacilityAction(
   values: FacilityInput
 ): Promise<ActionResult<FacilityInput>> {
   try {
-    const currentUser = await getSessionUser()
-    if (!currentUser) {
-      return { ok: false, code: "UNAUTHORIZED", message: "Sign in to continue." }
-    }
-    if (currentUser.role !== "ADMIN") {
-      return { ok: false, code: "FORBIDDEN", message: "Administrator access is required." }
-    }
+    const auth = await authorizeAdmin()
+    if ("failure" in auth) return auth.failure
 
-    const parsed = facilityInputSchema.safeParse(values)
-    if (!parsed.success) {
-      return {
-        ok: false,
-        code: "VALIDATION_ERROR",
-        message: "Please correct the highlighted fields.",
-        fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
-      }
-    }
+    const parsed = validate(facilityInputSchema, values)
+    if ("failure" in parsed) return parsed.failure
     const input = parsed.data
 
     await db
@@ -43,11 +32,6 @@ export async function updateFacilityAction(
     revalidatePath("/admin/settings")
     return { ok: true, data: input }
   } catch (error) {
-    console.error(error)
-    return {
-      ok: false,
-      code: "DATABASE_ERROR",
-      message: "The request could not be completed. Please try again.",
-    }
+    return unexpectedError(error)
   }
 }

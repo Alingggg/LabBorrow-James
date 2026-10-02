@@ -3,7 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { PageHeader } from "../../../_components/PageHeader"
+import { PageHeader } from "@/components/PageHeader"
 import { ResourceEditor } from "../../_components/ResourceEditor"
 import { getResource } from "../../data"
 

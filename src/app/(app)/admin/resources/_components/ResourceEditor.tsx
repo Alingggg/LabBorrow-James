@@ -12,12 +12,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import type { ResourceSummary } from "../../types"
+import type { ResourceSummary } from "../types"
 import { saveResourceAction } from "../actions"
-import { resourceInputSchema, type ResourceInput, type ResourceOutput } from "../zod-schemas"
+import { resourceInputSchema, type ResourceInput, type ResourceOutput } from "../schemas"
 
 const typeOptions = [
-  { value: "LAB", label: "Laboratory" },
   { value: "ROOM", label: "Room" },
   { value: "EQUIPMENT", label: "Equipment" },
 ]
@@ -36,7 +35,7 @@ export function ResourceEditor({ resource }: { resource?: ResourceSummary }) {
       id: resource?.id ?? "",
       name: resource?.name ?? "",
       description: resource?.description ?? "",
-      type: resource?.type ?? "LAB",
+      type: resource?.type ?? "ROOM",
       status: resource?.status ?? "AVAILABLE",
     },
   })

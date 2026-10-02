@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { PageHeader } from "../_components/PageHeader"
+import { PageHeader } from "@/components/PageHeader"
 import { SchoolProfile } from "./_components/SettingsForms"
 import { getSettingsPageData } from "./data"
 

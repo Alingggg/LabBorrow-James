@@ -7,3 +7,7 @@ export const userRoleValues = [
 
 export type UserRole = (typeof userRoleValues)[number]
 
+
+export function isStaffRole(role: UserRole) {
+  return role === "RESOURCE_STAFF" || role === "ADMIN"
+}

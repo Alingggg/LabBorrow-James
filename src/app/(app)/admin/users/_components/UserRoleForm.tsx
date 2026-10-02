@@ -10,7 +10,7 @@ import { Select } from "@/components/Select"
 import { Button } from "@/components/ui/button"
 import { roleOptions } from "@/lib/role-options"
 import { updateUserRoleAction } from "../actions"
-import { roleInputSchema, type CreateUserInput } from "../zod-schemas"
+import { roleInputSchema, type CreateUserInput } from "../schemas"
 import type { z } from "zod"
 
 export function UserRoleForm({ userId, role }: { userId: string; role: CreateUserInput["role"] }) {

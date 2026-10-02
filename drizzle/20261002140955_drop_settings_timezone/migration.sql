@@ -1,0 +1,1 @@
+ALTER TABLE "facility_settings" DROP COLUMN "timezone";

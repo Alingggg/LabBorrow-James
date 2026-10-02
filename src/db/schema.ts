@@ -4,8 +4,8 @@ import {
   check,
   index,
   pgEnum,
-  pgTable,
   smallint,
+  snakeCase,
   text,
   time,
   timestamp,
@@ -13,86 +13,81 @@ import {
   uuid,
 } from "drizzle-orm/pg-core"
 
+import { reservationStatuses } from "@/lib/reservation-status"
+import { resourceStatuses, resourceTypes } from "@/lib/resources"
 import { userRoleValues } from "@/lib/roles"
 
 export const userRole = pgEnum("user_role", userRoleValues)
-export const resourceType = pgEnum("resource_type", [
-  "LAB",
-  "ROOM",
-  "EQUIPMENT",
-])
-export const resourceStatus = pgEnum("resource_status", [
-  "AVAILABLE",
-  "UNAVAILABLE",
-  "RETIRED",
-])
+export const resourceType = pgEnum("resource_type", resourceTypes)
+export const resourceStatus = pgEnum("resource_status", resourceStatuses)
+export const reservationStatus = pgEnum("reservation_status", reservationStatuses)
 
-export const user = pgTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").default(false).notNull(),
-  image: text("image"),
-  role: userRole("role").default("STUDENT").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
+export const user = snakeCase.table("user", {
+  id: text().primaryKey(),
+  name: text().notNull(),
+  email: text().notNull().unique(),
+  emailVerified: boolean().default(false).notNull(),
+  image: text(),
+  role: userRole().default("STUDENT").notNull(),
+  createdAt: timestamp().defaultNow().notNull(),
+  updatedAt: timestamp()
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
 })
 
-export const session = pgTable(
+export const session = snakeCase.table(
   "session",
   {
-    id: text("id").primaryKey(),
-    expiresAt: timestamp("expires_at").notNull(),
-    token: text("token").notNull().unique(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    id: text().primaryKey(),
+    expiresAt: timestamp().notNull(),
+    token: text().notNull().unique(),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp()
       .$onUpdate(() => new Date())
       .notNull(),
-    ipAddress: text("ip_address"),
-    userAgent: text("user_agent"),
-    userId: text("user_id")
+    ipAddress: text(),
+    userAgent: text(),
+    userId: text()
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
   },
   (table) => [index("session_userId_idx").on(table.userId)]
 )
 
-export const account = pgTable(
+export const account = snakeCase.table(
   "account",
   {
-    id: text("id").primaryKey(),
-    accountId: text("account_id").notNull(),
-    providerId: text("provider_id").notNull(),
-    userId: text("user_id")
+    id: text().primaryKey(),
+    accountId: text().notNull(),
+    providerId: text().notNull(),
+    userId: text()
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    accessToken: text("access_token"),
-    refreshToken: text("refresh_token"),
-    idToken: text("id_token"),
-    accessTokenExpiresAt: timestamp("access_token_expires_at"),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-    scope: text("scope"),
-    password: text("password"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    accessToken: text(),
+    refreshToken: text(),
+    idToken: text(),
+    accessTokenExpiresAt: timestamp(),
+    refreshTokenExpiresAt: timestamp(),
+    scope: text(),
+    password: text(),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp()
       .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => [index("account_userId_idx").on(table.userId)]
 )
 
-export const verification = pgTable(
+export const verification = snakeCase.table(
   "verification",
   {
-    id: text("id").primaryKey(),
-    identifier: text("identifier").notNull(),
-    value: text("value").notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    id: text().primaryKey(),
+    identifier: text().notNull(),
+    value: text().notNull(),
+    expiresAt: timestamp().notNull(),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp()
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
@@ -100,18 +95,17 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 )
 
-export const facilitySettings = pgTable(
+export const facilitySettings = snakeCase.table(
   "facility_settings",
   {
-    id: text("id").primaryKey().default("default"),
-    institutionName: text("institution_name")
+    id: text().primaryKey().default("default"),
+    institutionName: text()
       .default("LabReserve Campus")
       .notNull(),
-    timezone: text("timezone").default("Asia/Manila").notNull(),
-    email: text("email").default("").notNull(),
-    phone: text("phone").default("").notNull(),
-    address: text("address").default("").notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
+    email: text().default("").notNull(),
+    phone: text().default("").notNull(),
+    address: text().default("").notNull(),
+    updatedAt: timestamp({ withTimezone: true })
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
@@ -121,14 +115,14 @@ export const facilitySettings = pgTable(
   ]
 )
 
-export const operatingHours = pgTable(
+export const operatingHours = snakeCase.table(
   "operating_hours",
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    dayOfWeek: smallint("day_of_week").notNull(),
-    openTime: time("open_time"),
-    closeTime: time("close_time"),
-    isClosed: boolean("is_closed").default(false).notNull(),
+    id: uuid().defaultRandom().primaryKey(),
+    dayOfWeek: smallint().notNull(),
+    openTime: time(),
+    closeTime: time(),
+    isClosed: boolean().default(false).notNull(),
   },
   (table) => [
     uniqueIndex("operating_hours_day_uidx").on(table.dayOfWeek),
@@ -140,18 +134,18 @@ export const operatingHours = pgTable(
   ]
 )
 
-export const resources = pgTable(
+export const resources = snakeCase.table(
   "resources",
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    name: text("name").notNull(),
-    description: text("description").notNull(),
-    type: resourceType("type").notNull(),
-    status: resourceStatus("status").default("AVAILABLE").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true })
+    id: uuid().defaultRandom().primaryKey(),
+    name: text().notNull(),
+    description: text(),
+    type: resourceType().notNull(),
+    status: resourceStatus().default("AVAILABLE").notNull(),
+    createdAt: timestamp({ withTimezone: true })
       .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
+    updatedAt: timestamp({ withTimezone: true })
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
@@ -159,6 +153,83 @@ export const resources = pgTable(
   (table) => [
     uniqueIndex("resources_name_uidx").on(table.name),
     index("resources_type_status_idx").on(table.type, table.status),
+  ]
+)
+
+export const reservations = snakeCase.table(
+  "reservations",
+  {
+    id: uuid().defaultRandom().primaryKey(),
+    userId: text()
+      .notNull()
+      .references(() => user.id),
+    resourceId: uuid()
+      .notNull()
+      .references(() => resources.id),
+    startAt: timestamp({ withTimezone: true }).notNull(),
+    endAt: timestamp({ withTimezone: true }).notNull(),
+    purpose: text().notNull(),
+    status: reservationStatus().notNull(),
+    reviewedBy: text().references(() => user.id),
+    reviewedAt: timestamp({ withTimezone: true }),
+    rejectionReason: text(),
+    createdAt: timestamp({ withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    check("reservations_valid_range", sql`${table.endAt} > ${table.startAt}`),
+    index("reservations_resource_start_idx").on(table.resourceId, table.startAt),
+    index("reservations_status_start_idx").on(table.status, table.startAt),
+    index("reservations_user_idx").on(table.userId),
+  ]
+)
+
+export const reservationStatusHistory = snakeCase.table(
+  "reservation_status_history",
+  {
+    id: uuid().defaultRandom().primaryKey(),
+    reservationId: uuid()
+      .notNull()
+      .references(() => reservations.id),
+    fromStatus: reservationStatus(),
+    toStatus: reservationStatus().notNull(),
+    changedBy: text()
+      .notNull()
+      .references(() => user.id),
+    changedAt: timestamp({ withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    reason: text(),
+  },
+  (table) => [
+    index("reservation_status_history_reservation_idx").on(table.reservationId),
+  ]
+)
+
+export const equipmentCheckouts = snakeCase.table(
+  "equipment_checkouts",
+  {
+    id: uuid().defaultRandom().primaryKey(),
+    reservationId: uuid()
+      .notNull()
+      .references(() => reservations.id),
+    checkedOutBy: text()
+      .notNull()
+      .references(() => user.id),
+    checkedOutAt: timestamp({ withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    returnedTo: text().references(() => user.id),
+    returnedAt: timestamp({ withTimezone: true }),
+    notes: text().default("").notNull(),
+  },
+  (table) => [
+    uniqueIndex("equipment_checkouts_reservation_uidx").on(table.reservationId),
   ]
 )
 
@@ -171,6 +242,9 @@ export const appRelations = defineRelationsPart(
     facilitySettings,
     operatingHours,
     resources,
+    reservations,
+    reservationStatusHistory,
+    equipmentCheckouts,
   },
   (r) => ({
     user: {

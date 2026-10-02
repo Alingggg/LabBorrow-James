@@ -13,7 +13,7 @@ Student, Faculty, Resource Staff, reservation, approval, checkout, and return wo
 - Resource category creation and editing
 - Laboratory, room, and individually tracked equipment creation and editing
 - Account role assignment with final-Administrator protection
-- School profile, timezone, and weekly operating-hours configuration
+- School profile and weekly operating-hours configuration (all times use Asia/Manila)
 - Responsive navigation plus loading, empty, validation, and error states
 
 ## Stack

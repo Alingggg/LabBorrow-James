@@ -5,7 +5,7 @@ import { count, eq } from "drizzle-orm"
 import { db } from "@/db"
 import { resources, user } from "@/db/schema"
 import { userRoleValues, type UserRole } from "@/lib/roles"
-import { requireAdmin } from "@/lib/session"
+import { requireAdmin } from "@/data/auth"
 
 export async function getAdminOverview() {
   await requireAdmin()

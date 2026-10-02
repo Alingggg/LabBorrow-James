@@ -6,37 +6,25 @@ import { revalidatePath } from "next/cache"
 import { db } from "@/db"
 import { createUser } from "@/db/create-user"
 import { user } from "@/db/schema"
-import { getSessionUser } from "@/lib/session"
-import { databaseErrorCode } from "@/lib/db-errors"
-import type { ActionResult } from "../types"
+import { unexpectedError, validate } from "@/lib/action-helpers"
+import type { ActionResult } from "@/types/action-result"
+import { authorizeAdmin } from "@/data/auth"
 import {
   createUserInputSchema,
   roleInputSchema,
   type CreateUserInput,
   type RoleInput,
-} from "./zod-schemas"
+} from "./schemas"
 
 export async function createUserAction(
   values: CreateUserInput
 ): Promise<ActionResult<Awaited<ReturnType<typeof createUser>>>> {
   try {
-    const currentUser = await getSessionUser()
-    if (!currentUser) {
-      return { ok: false, code: "UNAUTHORIZED", message: "Sign in to continue." }
-    }
-    if (currentUser.role !== "ADMIN") {
-      return { ok: false, code: "FORBIDDEN", message: "Administrator access is required." }
-    }
+    const auth = await authorizeAdmin()
+    if ("failure" in auth) return auth.failure
 
-    const parsed = createUserInputSchema.safeParse(values)
-    if (!parsed.success) {
-      return {
-        ok: false,
-        code: "VALIDATION_ERROR",
-        message: "Please correct the highlighted fields.",
-        fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
-      }
-    }
+    const parsed = validate(createUserInputSchema, values)
+    if ("failure" in parsed) return parsed.failure
 
     const created = await createUser(parsed.data)
 
@@ -44,19 +32,7 @@ export async function createUserAction(
     revalidatePath("/admin/users")
     return { ok: true, data: created }
   } catch (error) {
-    if (databaseErrorCode(error) === "23505") {
-      return {
-        ok: false,
-        code: "CONFLICT",
-        message: "An account with that email already exists.",
-      }
-    }
-    console.error(error)
-    return {
-      ok: false,
-      code: "DATABASE_ERROR",
-      message: "The request could not be completed. Please try again.",
-    }
+    return unexpectedError(error, "An account with that email already exists.")
   }
 }
 
@@ -64,23 +40,11 @@ export async function updateUserRoleAction(
   values: RoleInput
 ): Promise<ActionResult<RoleInput>> {
   try {
-    const currentUser = await getSessionUser()
-    if (!currentUser) {
-      return { ok: false, code: "UNAUTHORIZED", message: "Sign in to continue." }
-    }
-    if (currentUser.role !== "ADMIN") {
-      return { ok: false, code: "FORBIDDEN", message: "Administrator access is required." }
-    }
+    const auth = await authorizeAdmin()
+    if ("failure" in auth) return auth.failure
 
-    const parsed = roleInputSchema.safeParse(values)
-    if (!parsed.success) {
-      return {
-        ok: false,
-        code: "VALIDATION_ERROR",
-        message: "Please correct the highlighted fields.",
-        fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
-      }
-    }
+    const parsed = validate(roleInputSchema, values)
+    if ("failure" in parsed) return parsed.failure
     const input = parsed.data
 
     // All checks run before the update, so returning from the transaction
@@ -126,11 +90,6 @@ export async function updateUserRoleAction(
     revalidatePath("/admin/users")
     return { ok: true, data: input }
   } catch (error) {
-    console.error(error)
-    return {
-      ok: false,
-      code: "DATABASE_ERROR",
-      message: "The request could not be completed. Please try again.",
-    }
+    return unexpectedError(error)
   }
 }

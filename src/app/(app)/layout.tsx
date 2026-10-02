@@ -1,21 +1,14 @@
-import { eq } from "drizzle-orm"
-
 import { AppLayout } from "./_components/AppLayout"
-import { db } from "@/db"
-import { facilitySettings } from "@/db/schema"
-import { requireAdmin } from "@/lib/session"
+import { requireUser } from "@/data/auth"
+import { getInstitutionName } from "@/data/settings"
 
 export default async function AuthenticatedLayout({
   children,
 }: LayoutProps<"/">) {
-  const currentUser = await requireAdmin()
-  const [settings] = await db
-    .select({ institutionName: facilitySettings.institutionName })
-    .from(facilitySettings)
-    .where(eq(facilitySettings.id, "default"))
-    .limit(1)
+  const currentUser = await requireUser()
+  const institutionName = await getInstitutionName()
   return (
-    <AppLayout user={currentUser} institutionName={settings?.institutionName ?? "LabReserve Campus"}>
+    <AppLayout user={currentUser} institutionName={institutionName}>
       {children}
     </AppLayout>
   )

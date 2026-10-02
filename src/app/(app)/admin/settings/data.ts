@@ -4,8 +4,8 @@ import { eq } from "drizzle-orm"
 
 import { db } from "@/db"
 import { facilitySettings } from "@/db/schema"
-import { requireAdmin } from "@/lib/session"
-import type { FacilitySettingsDto } from "../types"
+import { requireAdmin } from "@/data/auth"
+import type { FacilitySettingsDto } from "./types"
 
 const defaults: FacilitySettingsDto = {
   institutionName: "LabReserve Campus",

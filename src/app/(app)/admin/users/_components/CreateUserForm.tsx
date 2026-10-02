@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { roleOptions } from "@/lib/role-options"
 import { createUserAction } from "../actions"
-import { createUserInputSchema, type CreateUserInput } from "../zod-schemas"
+import { createUserInputSchema, type CreateUserInput } from "../schemas"
 import type { z } from "zod"
 
 export function CreateUserForm({ onCreated }: { onCreated: () => void }) {

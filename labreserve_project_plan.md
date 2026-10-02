@@ -75,6 +75,21 @@ Only the following application technologies are prescribed by this plan.
 - **TypeScript**
 - **Tailwind CSS**
 
+### UI Components
+
+- **shadcn/ui** (Radix primitives) for all interface components, kept in `src/components/ui/`;
+- **Lucide** for icons; and
+- **Sonner** for toast notifications.
+
+Use shadcn/ui components instead of native HTML controls such as `<select>`, `<input>`, `<textarea>`, `<label>`, `<button>`, and `<table>`. Add missing components with the shadcn CLI rather than hand-writing styled native elements.
+
+### Dates and Times
+
+- **date-fns** for date parsing, formatting, and comparison; and
+- **@date-fns/tz** for school-timezone conversion.
+
+Do not hand-roll date arithmetic or timezone conversion with raw `Date` and `Intl` code.
+
 ### Forms and Validation
 
 - **React Hook Form**
@@ -109,7 +124,7 @@ OAuth and social login are not part of the initial scope.
 - **Vercel** for the Next.js deployment; and
 - **Neon** or **Supabase PostgreSQL** for the production database.
 
-The plan intentionally does not prescribe a package manager, UI component library, icon library, or date utility library.
+The plan intentionally does not prescribe a package manager.
 
 ---
 
@@ -126,7 +141,7 @@ The plan intentionally does not prescribe a package manager, UI component librar
 
 ### Resource Staff
 
-- review requests that require approval;
+- review pending requests;
 - approve or reject eligible requests;
 - see operational resource schedules;
 - check equipment out;
@@ -198,7 +213,7 @@ Server Action
         ├── load resource and school settings
         ├── validate operating hours and duration
         ├── reject reservation overlap
-        ├── choose pending or confirmed status
+        ├── set pending status (confirmed when staff book on behalf)
         └── write reservation and status history in a transaction
                 │
                 ▼
@@ -219,7 +234,6 @@ src/app/
 ├── (app)/
 │   ├── layout.tsx
 │   ├── _components/
-│   ├── _lib/
 │   ├── admin/
 │   │   └── page.tsx
 │   ├── staff/                    # enabled in the Resource Staff milestone
@@ -232,16 +246,17 @@ src/app/
 
 Parenthesized route groups organize the code and may provide shared layouts, but do not appear in public URLs. Because `(app)` already groups the authenticated application and supplies its shared shell, authenticated routes are not additionally nested beneath a `dashboard` segment. Administrator and Resource Staff folders remain real URL segments because they represent role-specific workspaces. Faculty and Student use shared `resources` and `reservations` routes, with server-side authorization and data filtering based on the authenticated role.
 
-Page-specific files may use `_components`, `_lib`, and `actions.ts` within their route subtree. Do not introduce a separate mandatory `src/server` hierarchy.
+Route-specific code lives in the route subtree: `actions.ts`, `data.ts`, `schemas.ts`, `types.ts`, and `_components/`. Code moves to a shared top-level folder only when a second route needs it; `Organization-Plan.md` has the placement rules. Do not introduce a separate mandatory `src/server` hierarchy.
 
 Broadly shared modules may remain in:
 
 ```text
 src/
-├── db/
-├── lib/
-├── schemas/
-└── components/
+├── db/          # Drizzle client, schema, createUser
+├── data/        # shared server-only reads and writes, one file per entity
+├── lib/         # client-safe helpers and constants
+├── types/       # shared types
+└── components/  # shared UI
 ```
 
 ---
@@ -309,16 +324,9 @@ EQUIPMENT
 
 Equipment represents an individually tracked item with its own resource record and reservation schedule. Quantity-based inventory is not part of the initial scope.
 
-### Approval Modes
+### Approval
 
-```text
-AUTO_APPROVE
-APPROVAL_REQUIRED
-```
-
-An eligible request for an auto-approved resource becomes confirmed immediately. An eligible request for a restricted resource begins pending review.
-
-Approval mode is added to resources in the Resource Staff milestone.
+Every reservation request requires approval. An eligible request begins as `PENDING_APPROVAL`, holds its time slot, and is approved or rejected by Resource Staff. A reservation that Resource Staff or an Administrator create on behalf of another user is confirmed immediately.
 
 ### Access Scopes
 
@@ -425,7 +433,6 @@ Resource names are unique.
 Later milestones extend this table:
 
 ```text
-approval_mode              # Resource Staff milestone
 access_scope               # Faculty milestone
 max_reservation_minutes    # Faculty milestone; must be positive
 ```
@@ -439,7 +446,6 @@ resource_id
 start_at
 end_at
 purpose
-notes
 status
 reviewed_by
 reviewed_at
@@ -473,8 +479,6 @@ checked_out_by
 checked_out_at
 returned_to
 returned_at
-checkout_condition
-return_condition
 notes
 ```
 
@@ -587,7 +591,7 @@ Faculty
     may view and manage only eligible personal reservations
 
 Resource Staff
-    may review restricted requests
+    may review pending requests
     may operate checkout and return workflows
     may view operational resource schedules
 
@@ -712,7 +716,7 @@ Do not expose other role workflows until this milestone is reviewed and accepted
 
 ### Milestone 2 — Resource Staff
 
-- resource approval mode;
+- staff booking on behalf of a user;
 - reservation and status-history tables with database-level overlap protection;
 - pending-request review;
 - approval and rejection with reasons;
@@ -886,7 +890,7 @@ Possible future resume entry:
 LabReserve | Next.js, TypeScript, PostgreSQL, Drizzle, Docker, Vercel
 
 • Built a school laboratory, room, and equipment reservation system with
-  role-based access, configurable approval policies,
+  role-based access, staff approval workflows,
   equipment custody tracking, and conflict-safe reservation workflows.
 
 • Deployed the full-stack application with managed PostgreSQL, database-backed
@@ -924,7 +928,7 @@ LabReserve is complete when:
 ✓ Students, Faculty, Resource Staff, and Administrators have approved workflows
 ✓ resource visibility follows access scope
 ✓ eligible users can create and cancel reservations
-✓ restricted requests can be approved or rejected
+✓ pending requests can be approved or rejected
 ✓ equipment checkout and return preserve condition records
 ✓ conflicting active reservations are prevented at the database level
 ✓ every reservation state change produces history

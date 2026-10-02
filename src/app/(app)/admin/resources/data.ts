@@ -4,8 +4,8 @@ import { asc, eq } from "drizzle-orm"
 
 import { db } from "@/db"
 import { resources } from "@/db/schema"
-import { requireAdmin } from "@/lib/session"
-import type { ResourceSummary } from "../types"
+import { requireAdmin } from "@/data/auth"
+import type { ResourceSummary } from "./types"
 
 const selection = {
   id: resources.id,

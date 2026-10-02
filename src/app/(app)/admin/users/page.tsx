@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 
 import { Badge } from "@/components/ui/badge"
 import { Table,TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { PageHeader } from "../_components/PageHeader"
+import { PageHeader } from "@/components/PageHeader"
 import { CreateUserSheet } from "./_components/CreateUserSheet"
 import { UserRoleForm } from "./_components/UserRoleForm"
 import { listUsers } from "./data"

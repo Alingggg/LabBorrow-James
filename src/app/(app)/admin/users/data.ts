@@ -4,7 +4,7 @@ import { asc } from "drizzle-orm"
 
 import { db } from "@/db"
 import { user } from "@/db/schema"
-import { requireAdmin } from "@/lib/session"
+import { requireAdmin } from "@/data/auth"
 
 export async function listUsers() {
   const currentUser = await requireAdmin()
