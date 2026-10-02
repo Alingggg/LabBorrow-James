@@ -12,9 +12,8 @@ export function isStaffRole(role: UserRole) {
   return role === "RESOURCE_STAFF" || role === "ADMIN"
 }
 
-// Students join in Milestone 4
 export function isRequesterRole(role: UserRole) {
-  return role === "FACULTY"
+  return role === "FACULTY" || role === "STUDENT"
 }
 
 export function homeFor(role: UserRole) {

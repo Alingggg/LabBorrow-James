@@ -158,7 +158,7 @@ The plan intentionally does not prescribe a package manager.
 
 ### Student
 
-- register and sign in;
+- sign in with a school-issued account;
 - browse resources available to all users;
 - create reservation requests;
 - view upcoming and previous reservations; and
@@ -576,7 +576,7 @@ The database is the final authority for concurrency safety.
 
 ### Authentication
 
-- use Better Auth email/password registration and login;
+- use Better Auth email/password login; Administrators create accounts;
 - use database-backed sessions;
 - protect authenticated route groups;
 - keep secrets in environment variables; and
@@ -738,8 +738,8 @@ Do not expose other role workflows until this milestone is reviewed and accepted
 
 ### Milestone 4 — Student
 
-- public registration;
-- general resource catalog;
+- enable the Student role on the shared requester routes;
+- general resource catalog (`ALL_USERS` resources only);
 - reservation creation;
 - upcoming and previous reservations; and
 - eligible cancellation.

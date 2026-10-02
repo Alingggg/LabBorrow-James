@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import type { SessionUser } from "@/data/auth"
+import { roleOptions } from "@/lib/role-options"
 import { homeFor, isRequesterRole, type UserRole } from "@/lib/roles"
 import { cn } from "@/lib/utils"
 
@@ -56,11 +57,9 @@ function navigationFor(role: UserRole) {
   return []
 }
 
-const roleLabels: Record<string, string> = {
-  ADMIN: "Administrator",
-  RESOURCE_STAFF: "Resource staff",
-  FACULTY: "Faculty",
-}
+const roleLabels: Record<string, string> = Object.fromEntries(
+  roleOptions.map((option) => [option.value, option.label])
+)
 
 function Brand({ institutionName, href }: { institutionName: string; href: string }) {
   return (
