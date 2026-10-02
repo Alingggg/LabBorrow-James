@@ -15,7 +15,6 @@ const selection = {
   resourceName: resources.name,
   resourceType: resources.type,
   requesterName: user.name,
-  requesterEmail: user.email,
   startAt: reservations.startAt,
   endAt: reservations.endAt,
   purpose: reservations.purpose,

@@ -26,7 +26,7 @@ export default async function PendingRequestsPage() {
             {requests.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.resourceName}</TableCell>
-                <TableCell><p>{item.requesterName}</p><p className="text-xs text-muted-foreground">{item.requesterEmail}</p></TableCell>
+                <TableCell>{item.requesterName}</TableCell>
                 <TableCell className="whitespace-nowrap">{item.when}</TableCell>
                 <TableCell className="max-w-xs truncate">{item.purpose}</TableCell>
                 <TableCell>

@@ -62,12 +62,6 @@ const roleLabels: Record<string, string> = {
   FACULTY: "Faculty",
 }
 
-const workspaceLabels: Record<string, string> = {
-  ADMIN: "Administrator workspace",
-  RESOURCE_STAFF: "Staff workspace",
-  FACULTY: "Faculty workspace",
-}
-
 function Brand({ institutionName, href }: { institutionName: string; href: string }) {
   return (
     <Link href={href} className="flex min-w-0 items-center gap-2.5">
@@ -132,7 +126,6 @@ export function AppLayout({
   const [mobileOpen, setMobileOpen] = useState(false)
   const role = user.role as UserRole
   const home = homeFor(role) ?? "/"
-  const workspaceLabel = workspaceLabels[role]
 
   return (
     <div className="min-h-svh bg-muted/30">
@@ -167,7 +160,6 @@ export function AppLayout({
               <Menu aria-hidden="true" />
             </Button>
             <div className="lg:hidden"><Brand institutionName={institutionName} href={home} /></div>
-            <p className="hidden text-sm text-muted-foreground lg:block">{workspaceLabel}</p>
           </div>
           <div className="lg:hidden"><SignOutButton compact /></div>
         </header>

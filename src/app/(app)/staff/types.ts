@@ -6,7 +6,6 @@ export type ReservationRow = {
   resourceName: string
   resourceType: ResourceType
   requesterName: string
-  requesterEmail: string
   when: string
   purpose: string
   status: ReservationStatus
