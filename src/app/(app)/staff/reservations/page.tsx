@@ -4,11 +4,11 @@ import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { cn } from "@/lib/utils"
+import { LinkTabs } from "@/components/LinkTabs"
 import { PageHeader } from "@/components/PageHeader"
+import { ReservationStatusBadge } from "@/components/ReservationStatusBadge"
 import { CancelButton } from "../_components/ReservationActions"
 import { ReservationFilters } from "../_components/ReservationFilters"
-import { ReservationStatusBadge } from "../_components/ReservationStatusBadge"
 import { listReservations } from "../data"
 
 export const metadata: Metadata = { title: "Reservations" }
@@ -35,24 +35,14 @@ export default async function ReservationsPage({ searchParams }: PageProps<"/sta
         <Button asChild><Link href="/staff/reservations/new"><Plus /> New reservation</Link></Button>
       </div>
 
-      <div className="flex gap-1 border-b" role="tablist" aria-label="Resource type">
-        {tabs.map((item) => (
-          <Link
-            key={item.value}
-            href={`/staff/reservations?type=${item.value}`}
-            role="tab"
-            aria-selected={tab === item.value}
-            className={cn(
-              "-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors",
-              tab === item.value
-                ? "border-primary text-foreground"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            )}
-          >
-            {item.label}
-          </Link>
-        ))}
-      </div>
+      <LinkTabs
+        label="Resource type"
+        tabs={tabs.map((item) => ({
+          href: `/staff/reservations?type=${item.value}`,
+          label: item.label,
+          active: tab === item.value,
+        }))}
+      />
 
       <ReservationFilters
         key={`${tab}-${filters.status ?? ""}-${filters.resourceId ?? ""}`}

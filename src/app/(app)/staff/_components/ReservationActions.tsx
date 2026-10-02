@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
+import { ReasonSheet } from "@/components/ReasonSheet"
 import { Button } from "@/components/ui/button"
 import {
   approveReservationAction,
   cancelReservationAction,
   rejectReservationAction,
 } from "../actions"
-import { ReasonSheet } from "./ReasonSheet"
 
 export function ApproveButton({ reservationId }: { reservationId: string }) {
   const router = useRouter()

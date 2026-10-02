@@ -35,6 +35,7 @@ export async function saveResourceAction(
 
     revalidatePath("/admin")
     revalidatePath("/admin/resources")
+    revalidatePath("/resources", "layout")
     return { ok: true, data: record }
   } catch (error) {
     return unexpectedError(error, "A resource with that name already exists.")

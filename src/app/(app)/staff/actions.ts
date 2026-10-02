@@ -12,11 +12,13 @@ import { createReservation, transitionReservation } from "@/data/reservations"
 import { authorizeStaff } from "@/data/auth"
 import {
   cancelReservationInputSchema,
+  reservationIdSchema,
+  type CancelReservationInput,
+} from "@/schemas/reservations"
+import {
   createReservationInputSchema,
   equipmentNotesInputSchema,
   rejectReservationInputSchema,
-  reservationIdSchema,
-  type CancelReservationInput,
   type CreateReservationInput,
   type EquipmentNotesInput,
   type RejectReservationInput,

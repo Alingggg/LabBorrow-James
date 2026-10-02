@@ -5,6 +5,7 @@ import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { PageHeader } from "@/components/PageHeader"
+import { accessScopeLabels } from "@/lib/resources"
 import { ResourceStatusBadge } from "./_components/ResourceStatusBadge"
 import { listResources } from "./data"
 
@@ -22,7 +23,7 @@ export default async function AdminResourcesPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/40">
-              {["Name", "Type", "Status"].map((label) => (
+              {["Name", "Type", "Access", "Status"].map((label) => (
                 <TableHead key={label} className="h-11 px-4 text-xs font-semibold tracking-wide text-muted-foreground uppercase">{label}</TableHead>
               ))}
               <TableHead className="h-11 px-4" />
@@ -33,11 +34,12 @@ export default async function AdminResourcesPage() {
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.name}</TableCell>
                 <TableCell>{item.type}</TableCell>
+                <TableCell>{accessScopeLabels[item.accessScope]}</TableCell>
                 <TableCell><ResourceStatusBadge status={item.status} /></TableCell>
                 <TableCell className="text-right"><Link href={`/admin/resources/${item.id}/edit`} className="text-sm font-medium hover:underline">Edit</Link></TableCell>
               </TableRow>
             ))}
-            {!records.length && <TableRow><TableCell colSpan={4} className="h-28 text-center text-muted-foreground">No resources yet.</TableCell></TableRow>}
+            {!records.length && <TableRow><TableCell colSpan={5} className="h-28 text-center text-muted-foreground">No resources yet.</TableCell></TableRow>}
           </TableBody>
         </Table>
       </div>

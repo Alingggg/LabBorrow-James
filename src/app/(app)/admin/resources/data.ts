@@ -13,6 +13,8 @@ const selection = {
   description: resources.description,
   type: resources.type,
   status: resources.status,
+  accessScope: resources.accessScope,
+  maxReservationMinutes: resources.maxReservationMinutes,
 }
 
 export async function listResources(): Promise<ResourceSummary[]> {

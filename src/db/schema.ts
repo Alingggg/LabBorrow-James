@@ -3,6 +3,7 @@ import {
   boolean,
   check,
   index,
+  integer,
   pgEnum,
   smallint,
   snakeCase,
@@ -14,12 +15,13 @@ import {
 } from "drizzle-orm/pg-core"
 
 import { reservationStatuses } from "@/lib/reservation-status"
-import { resourceStatuses, resourceTypes } from "@/lib/resources"
+import { accessScopes, resourceStatuses, resourceTypes } from "@/lib/resources"
 import { userRoleValues } from "@/lib/roles"
 
 export const userRole = pgEnum("user_role", userRoleValues)
 export const resourceType = pgEnum("resource_type", resourceTypes)
 export const resourceStatus = pgEnum("resource_status", resourceStatuses)
+export const accessScope = pgEnum("access_scope", accessScopes)
 export const reservationStatus = pgEnum("reservation_status", reservationStatuses)
 
 export const user = snakeCase.table("user", {
@@ -142,6 +144,8 @@ export const resources = snakeCase.table(
     description: text(),
     type: resourceType().notNull(),
     status: resourceStatus().default("AVAILABLE").notNull(),
+    accessScope: accessScope().default("ALL_USERS").notNull(),
+    maxReservationMinutes: integer().default(120).notNull(),
     createdAt: timestamp({ withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -153,6 +157,7 @@ export const resources = snakeCase.table(
   (table) => [
     uniqueIndex("resources_name_uidx").on(table.name),
     index("resources_type_status_idx").on(table.type, table.status),
+    check("resources_max_minutes_positive", sql`${table.maxReservationMinutes} > 0`),
   ]
 )
 

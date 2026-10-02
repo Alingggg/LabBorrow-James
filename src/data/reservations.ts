@@ -1,6 +1,6 @@
 import "server-only"
 
-import { isFuture } from "date-fns"
+import { differenceInMinutes, isFuture } from "date-fns"
 import { eq } from "drizzle-orm"
 
 import { db } from "@/db"
@@ -14,6 +14,7 @@ import {
 import type { ActionResult } from "@/types/action-result"
 import { databaseErrorCode } from "@/lib/db-errors"
 import { canTransition, type ReservationStatus } from "@/lib/reservation-status"
+import { formatMaxDuration, scopesForRole } from "@/lib/resources"
 import { isStaffRole, type UserRole } from "@/lib/roles"
 import { localPartsToUtc, utcToLocalParts } from "@/lib/school-time"
 
@@ -85,7 +86,11 @@ export async function createReservation(
       }
 
       const [resource] = await tx
-        .select({ status: resources.status })
+        .select({
+          status: resources.status,
+          accessScope: resources.accessScope,
+          maxReservationMinutes: resources.maxReservationMinutes,
+        })
         .from(resources)
         .where(eq(resources.id, input.resourceId))
         .limit(1)
@@ -95,14 +100,22 @@ export async function createReservation(
       if (resource.status !== "AVAILABLE") {
         return fail("INVALID_STATE", "That resource is not available for reservation.")
       }
+      if (differenceInMinutes(endAt, startAt) > resource.maxReservationMinutes) {
+        const message = `This resource can be reserved for at most ${formatMaxDuration(resource.maxReservationMinutes)}.`
+        return fail("VALIDATION_ERROR", message, { endTime: [message] })
+      }
 
       const [owner] = await tx
-        .select({ id: user.id })
+        .select({ id: user.id, role: user.role })
         .from(user)
         .where(eq(user.id, input.userId))
         .limit(1)
       if (!owner) {
         return fail("VALIDATION_ERROR", "User not found.", { userId: ["User not found."] })
+      }
+      if (!scopesForRole(owner.role).includes(resource.accessScope)) {
+        const message = "This resource is limited to faculty and staff."
+        return fail("VALIDATION_ERROR", message, { resourceId: [message] })
       }
 
       const status: ReservationStatus =
@@ -151,6 +164,7 @@ export async function transitionReservation(
     id: string
     to: ReservationStatus
     actor: Actor
+    ownerId?: string
     reason?: string
     guard?: (reservation: LockedReservation) => Promise<Failure | null>
   }
@@ -161,7 +175,9 @@ export async function transitionReservation(
     .where(eq(reservations.id, options.id))
     .for("update")
     .limit(1)
-  if (!current) return fail("NOT_FOUND", "Reservation not found.")
+  if (!current || (options.ownerId && current.userId !== options.ownerId)) {
+    return fail("NOT_FOUND", "Reservation not found.")
+  }
 
   if (!canTransition(current.status, options.to)) {
     return fail(

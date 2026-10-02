@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { accessScopeLabels, accessScopes } from "@/lib/resources"
 import type { ResourceSummary } from "../types"
 import { saveResourceAction } from "../actions"
 import { resourceInputSchema, type ResourceInput, type ResourceOutput } from "../schemas"
@@ -27,6 +28,8 @@ const statusOptions = [
   { value: "RETIRED", label: "Retired" },
 ]
 
+const accessOptions = accessScopes.map((scope) => ({ value: scope, label: accessScopeLabels[scope] }))
+
 export function ResourceEditor({ resource }: { resource?: ResourceSummary }) {
   const router = useRouter()
   const form = useForm<ResourceInput, unknown, ResourceOutput>({
@@ -37,6 +40,8 @@ export function ResourceEditor({ resource }: { resource?: ResourceSummary }) {
       description: resource?.description ?? "",
       type: resource?.type ?? "ROOM",
       status: resource?.status ?? "AVAILABLE",
+      accessScope: resource?.accessScope ?? "ALL_USERS",
+      maxReservationMinutes: resource?.maxReservationMinutes ?? 120,
     },
   })
   const { register, control, handleSubmit, formState } = form
@@ -111,6 +116,38 @@ export function ResourceEditor({ resource }: { resource?: ResourceSummary }) {
             )}
           />
           <FieldError id="status-error" message={errors.status?.message} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="accessScope">Access</Label>
+          <Controller
+            control={control}
+            name="accessScope"
+            render={({ field }) => (
+              <Select
+                id="accessScope"
+                name={field.name}
+                options={accessOptions}
+                value={field.value ?? ""}
+                onValueChange={field.onChange}
+                invalid={!!errors.accessScope}
+              />
+            )}
+          />
+          <FieldError id="accessScope-error" message={errors.accessScope?.message} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="maxReservationMinutes">Max duration (minutes)</Label>
+          <Input
+            id="maxReservationMinutes"
+            type="number"
+            min={1}
+            max={1440}
+            step={1}
+            aria-invalid={!!errors.maxReservationMinutes}
+            aria-describedby={errors.maxReservationMinutes ? "maxReservationMinutes-error" : undefined}
+            {...register("maxReservationMinutes", { valueAsNumber: true })}
+          />
+          <FieldError id="maxReservationMinutes-error" message={errors.maxReservationMinutes?.message} />
         </div>
       </div>
       <Button type="submit" disabled={formState.isSubmitting}>

@@ -237,8 +237,9 @@ src/app/
 │   ├── admin/
 │   │   └── page.tsx
 │   ├── staff/                    # enabled in the Resource Staff milestone
-│   ├── resources/                # enabled in the Faculty milestone
-│   └── reservations/             # enabled in the Faculty milestone
+│   └── (requester)/              # shared Faculty and Student guard; no URL segment
+│       ├── resources/            # enabled in the Faculty milestone
+│       └── reservations/         # enabled in the Faculty milestone
 ├── api/
 ├── layout.tsx
 └── page.tsx
@@ -537,6 +538,8 @@ A new request must:
 - target an available resource;
 - satisfy the resource access scope;
 - avoid an active reservation overlap for the same resource.
+
+These rules also apply when Resource Staff book on behalf of a user; access scope is checked against the role of the user the reservation is for.
 
 A resource accepts only one active reservation at a time in the initial version.
 

@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
 import type { ActionResult } from "@/types/action-result"
-import { optionalReasonFormSchema, requiredReasonFormSchema } from "../schemas"
+import { optionalReasonFormSchema, requiredReasonFormSchema } from "@/schemas/reservations"
 
 export function ReasonSheet({
   trigger,

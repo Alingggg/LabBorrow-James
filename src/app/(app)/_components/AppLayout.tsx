@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import type { SessionUser } from "@/data/auth"
+import { homeFor, isRequesterRole, type UserRole } from "@/lib/roles"
 import { cn } from "@/lib/utils"
 
 type NavItem = { href: string; label: string; icon: typeof Users; exact?: boolean }
@@ -38,7 +39,12 @@ const staffNavigation: NavItem[] = [
   { href: "/staff/equipment", label: "Equipment", icon: PackageCheck },
 ]
 
-function navigationFor(role: string) {
+const requesterNavigation: NavItem[] = [
+  { href: "/resources", label: "Resources", icon: Microscope },
+  { href: "/reservations", label: "My reservations", icon: CalendarDays },
+]
+
+function navigationFor(role: UserRole) {
   if (role === "ADMIN") {
     return [
       { label: "Administration", items: adminNavigation },
@@ -46,12 +52,20 @@ function navigationFor(role: string) {
     ]
   }
   if (role === "RESOURCE_STAFF") return [{ label: null, items: staffNavigation }]
+  if (isRequesterRole(role)) return [{ label: null, items: requesterNavigation }]
   return []
 }
 
 const roleLabels: Record<string, string> = {
   ADMIN: "Administrator",
   RESOURCE_STAFF: "Resource staff",
+  FACULTY: "Faculty",
+}
+
+const workspaceLabels: Record<string, string> = {
+  ADMIN: "Administrator workspace",
+  RESOURCE_STAFF: "Staff workspace",
+  FACULTY: "Faculty workspace",
 }
 
 function Brand({ institutionName, href }: { institutionName: string; href: string }) {
@@ -68,7 +82,7 @@ function Brand({ institutionName, href }: { institutionName: string; href: strin
   )
 }
 
-function Navigation({ role, onNavigate }: { role: string; onNavigate?: () => void }) {
+function Navigation({ role, onNavigate }: { role: UserRole; onNavigate?: () => void }) {
   const pathname = usePathname()
   return (
     <nav className="space-y-5" aria-label="Main navigation">
@@ -116,8 +130,9 @@ export function AppLayout({
   institutionName: string
 }) {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const home = user.role === "ADMIN" ? "/admin" : "/staff"
-  const workspaceLabel = user.role === "ADMIN" ? "Administrator workspace" : "Staff workspace"
+  const role = user.role as UserRole
+  const home = homeFor(role) ?? "/"
+  const workspaceLabel = workspaceLabels[role]
 
   return (
     <div className="min-h-svh bg-muted/30">
@@ -125,7 +140,7 @@ export function AppLayout({
         <div className="flex h-16 items-center border-b px-5">
           <Brand institutionName={institutionName} href={home} />
         </div>
-        <div className="flex-1 overflow-y-auto px-3 py-5"><Navigation role={user.role} /></div>
+        <div className="flex-1 overflow-y-auto px-3 py-5"><Navigation role={role} /></div>
         <div className="border-t p-4">
           <div className="flex items-center gap-3">
             <Avatar><AvatarFallback>
@@ -165,7 +180,7 @@ export function AppLayout({
         <SheetContent side="left" className="w-[290px] p-0">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           <div className="border-b px-5 py-4"><Brand institutionName={institutionName} href={home} /></div>
-          <div className="px-3 py-5"><Navigation role={user.role} onNavigate={() => setMobileOpen(false)} /></div>
+          <div className="px-3 py-5"><Navigation role={role} onNavigate={() => setMobileOpen(false)} /></div>
         </SheetContent>
       </Sheet>
     </div>

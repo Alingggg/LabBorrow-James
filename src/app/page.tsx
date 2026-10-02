@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 
 import { requireUser } from "@/data/auth";
+import { homeFor, type UserRole } from "@/lib/roles";
 
 export default async function Home() {
   const currentUser = await requireUser();
 
-  if (currentUser.role === "ADMIN") redirect("/admin");
-  if (currentUser.role === "RESOURCE_STAFF") redirect("/staff");
+  const home = homeFor(currentUser.role as UserRole);
+  if (home) redirect(home);
 
   return <main className="min-h-svh" />;
 }
