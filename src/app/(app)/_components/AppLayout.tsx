@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
+  CalendarClock,
   CalendarDays,
   ClipboardCheck,
   FlaskConical,
@@ -36,12 +37,14 @@ const adminNavigation: NavItem[] = [
 
 const staffNavigation: NavItem[] = [
   { href: "/staff", label: "Pending requests", icon: ClipboardCheck, exact: true },
+  { href: "/staff/schedule", label: "Schedule", icon: CalendarClock },
   { href: "/staff/reservations", label: "Reservations", icon: CalendarDays },
   { href: "/staff/equipment", label: "Equipment", icon: PackageCheck },
 ]
 
 const requesterNavigation: NavItem[] = [
   { href: "/resources", label: "Resources", icon: Microscope },
+  { href: "/schedule", label: "Schedule", icon: CalendarClock },
   { href: "/reservations", label: "My reservations", icon: CalendarDays },
 ]
 

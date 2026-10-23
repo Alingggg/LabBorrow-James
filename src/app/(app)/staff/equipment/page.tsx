@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { PageHeader } from "@/components/PageHeader"
 import { CheckoutButton, ReturnButton } from "../_components/EquipmentActions"
+import { CompleteButton } from "../_components/ReservationActions"
 import { listEquipmentWork } from "../data"
 import type { EquipmentRow } from "../types"
 
@@ -59,7 +60,9 @@ export default async function EquipmentPage() {
         title="Ready for checkout"
         rows={readyForCheckout}
         emptyText="No confirmed equipment reservations."
-        action={(row) => <CheckoutButton reservationId={row.id} />}
+        action={(row) =>
+          row.canComplete ? <CompleteButton reservationId={row.id} /> : <CheckoutButton reservationId={row.id} />
+        }
       />
       <EquipmentTable
         title="Checked out"

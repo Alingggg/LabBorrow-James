@@ -11,7 +11,9 @@
     "typecheck": "next typegen && tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "create-admin": "bun --env-file=.env scripts/create-admin.ts"
+    "create-admin": "bun --env-file=.env scripts/create-admin.ts",
+    "seed:resources": "bun --env-file=.env scripts/seed-resources.ts",
+    "seed:reservations": "bun --env-file=.env scripts/seed-reservations.ts"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "1.7.6",

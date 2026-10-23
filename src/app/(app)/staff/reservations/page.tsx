@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { LinkTabs } from "@/components/LinkTabs"
 import { PageHeader } from "@/components/PageHeader"
 import { ReservationStatusBadge } from "@/components/ReservationStatusBadge"
-import { CancelButton } from "../_components/ReservationActions"
+import { CancelButton, CompleteButton } from "../_components/ReservationActions"
 import { ReservationFilters } from "../_components/ReservationFilters"
 import { listReservations } from "../data"
 
@@ -73,8 +73,12 @@ export default async function ReservationsPage({ searchParams }: PageProps<"/sta
                   {item.rejectionReason && <p className="mt-1 max-w-xs truncate text-xs text-muted-foreground">{item.rejectionReason}</p>}
                 </TableCell>
                 <TableCell className="text-right">
-                  {(item.status === "PENDING_APPROVAL" || item.status === "CONFIRMED") && (
-                    <CancelButton reservationId={item.id} />
+                  {item.canComplete ? (
+                    <CompleteButton reservationId={item.id} />
+                  ) : (
+                    (item.status === "PENDING_APPROVAL" || item.status === "CONFIRMED") && (
+                      <CancelButton reservationId={item.id} />
+                    )
                   )}
                 </TableCell>
               </TableRow>

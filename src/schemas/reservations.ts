@@ -3,7 +3,7 @@ import { z } from "zod"
 const timeOfDay = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Enter a valid time.")
 
 export const reservationRequestSchema = z.object({
-  resourceId: z.string().uuid("Choose a resource."),
+  resourceId: z.uuid("Choose a resource."),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Choose a date."),
   startTime: timeOfDay,
   endTime: timeOfDay,
@@ -11,7 +11,7 @@ export const reservationRequestSchema = z.object({
 })
 
 export const reservationIdSchema = z.object({
-  reservationId: z.string().uuid(),
+  reservationId: z.uuid(),
 })
 
 export const cancelReservationInputSchema = reservationIdSchema.extend({

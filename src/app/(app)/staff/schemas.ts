@@ -17,7 +17,7 @@ export const equipmentNotesInputSchema = reservationIdSchema.extend({
 
 export const reservationFilterSchema = z.object({
   status: z.enum(reservationStatuses).optional(),
-  resourceId: z.string().uuid().optional(),
+  resourceId: z.uuid().optional(),
 })
 
 export const notesFormSchema = z.object({

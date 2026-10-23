@@ -1,6 +1,7 @@
 import "server-only"
 
 import { asc, eq } from "drizzle-orm"
+import { z } from "zod"
 
 import { db } from "@/db"
 import { resources } from "@/db/schema"
@@ -27,6 +28,8 @@ export async function listResources(): Promise<ResourceSummary[]> {
 
 export async function getResource(resourceId: string): Promise<ResourceSummary | null> {
   await requireAdmin()
+  if (!z.uuid().safeParse(resourceId).success) return null
+
   const [item] = await db
     .select(selection)
     .from(resources)

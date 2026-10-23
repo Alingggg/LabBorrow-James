@@ -1,11 +1,13 @@
 import "server-only"
 
-import { and, asc, desc, eq, sql } from "drizzle-orm"
+import { isPast } from "date-fns"
+import { and, asc, desc, eq, ne, sql } from "drizzle-orm"
 
 import { db } from "@/db"
 import { reservations, resources, user } from "@/db/schema"
 import { formatSchoolRange } from "@/lib/school-time"
 import { requireStaff } from "@/data/auth"
+import { getDaySchedule, type SchoolDay } from "@/data/schedule"
 import type { ResourceType } from "@/lib/resources"
 import type { BookingFormData, EquipmentRow, ReservationRow } from "./types"
 import { reservationFilterSchema } from "./schemas"
@@ -26,8 +28,14 @@ function toRow({
   startAt,
   endAt,
   ...row
-}: Omit<ReservationRow, "when"> & { startAt: Date; endAt: Date }): ReservationRow {
-  return { ...row, when: formatSchoolRange(startAt, endAt) }
+}: Omit<ReservationRow, "when" | "ended" | "canComplete"> & { startAt: Date; endAt: Date }): ReservationRow {
+  const ended = isPast(endAt)
+  return {
+    ...row,
+    when: formatSchoolRange(startAt, endAt),
+    ended,
+    canComplete: row.status === "RETURNED" || (row.status === "CONFIRMED" && ended),
+  }
 }
 
 export async function listPendingReservations(): Promise<ReservationRow[]> {
@@ -108,6 +116,12 @@ export async function listEquipmentWork(): Promise<{
     readyForCheckout: ready.map(toRow),
     checkedOut: out.map(toRow),
   }
+}
+
+export async function getStaffSchedule(day: SchoolDay) {
+  await requireStaff()
+  // Unavailable resources stay visible so staff can see bookings made before the change
+  return getDaySchedule(day, { resourceFilter: ne(resources.status, "RETIRED"), withDetails: true })
 }
 
 export async function getBookingFormData(): Promise<BookingFormData> {

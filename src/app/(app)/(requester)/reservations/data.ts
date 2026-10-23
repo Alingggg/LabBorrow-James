@@ -1,7 +1,7 @@
 import "server-only"
 
 import { isFuture } from "date-fns"
-import { and, asc, desc, eq, gt, inArray, lte, notInArray, or, sql } from "drizzle-orm"
+import { and, asc, desc, eq, gt, inArray, lte, ne, notInArray, or, sql } from "drizzle-orm"
 
 import { db } from "@/db"
 import { reservations, resources } from "@/db/schema"
@@ -28,14 +28,21 @@ export async function listMyReservations(view: ReservationView): Promise<MyReser
     .where(
       and(
         eq(reservations.userId, currentUser.id),
+        // Checked-out equipment stays upcoming until it's returned, even when overdue
         upcoming
-          ? and(
-              inArray(reservations.status, activeReservationStatuses),
-              gt(reservations.endAt, sql`now()`)
+          ? or(
+              eq(reservations.status, "CHECKED_OUT"),
+              and(
+                inArray(reservations.status, activeReservationStatuses),
+                gt(reservations.endAt, sql`now()`)
+              )
             )
-          : or(
-              notInArray(reservations.status, [...activeReservationStatuses]),
-              lte(reservations.endAt, sql`now()`)
+          : and(
+              ne(reservations.status, "CHECKED_OUT"),
+              or(
+                notInArray(reservations.status, [...activeReservationStatuses]),
+                lte(reservations.endAt, sql`now()`)
+              )
             )
       )
     )

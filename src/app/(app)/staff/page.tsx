@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 
+import { Badge } from "@/components/ui/badge"
 import { PageHeader } from "@/components/PageHeader"
 import { ApproveButton, RejectButton } from "./_components/ReservationActions"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -27,11 +28,14 @@ export default async function PendingRequestsPage() {
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.resourceName}</TableCell>
                 <TableCell>{item.requesterName}</TableCell>
-                <TableCell className="whitespace-nowrap">{item.when}</TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {item.when}
+                  {item.ended && <Badge variant="outline" className="ml-2">Time passed</Badge>}
+                </TableCell>
                 <TableCell className="max-w-xs truncate">{item.purpose}</TableCell>
                 <TableCell>
                   <div className="flex justify-end gap-2">
-                    <ApproveButton reservationId={item.id} />
+                    {!item.ended && <ApproveButton reservationId={item.id} />}
                     <RejectButton reservationId={item.id} />
                   </div>
                 </TableCell>

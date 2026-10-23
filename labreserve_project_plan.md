@@ -145,13 +145,15 @@ The plan intentionally does not prescribe a package manager.
 - approve or reject eligible requests;
 - see operational resource schedules;
 - check equipment out;
-- receive returned equipment; and
-- record checkout and return condition.
+- receive returned equipment;
+- record checkout and return notes; and
+- mark finished reservations completed.
 
 ### Faculty
 
 - sign in;
 - browse resources allowed for Faculty and Resource Staff;
+- see booked times across those resources for a chosen day;
 - create reservation requests;
 - view upcoming and previous reservations; and
 - cancel eligible reservations.
@@ -160,6 +162,7 @@ The plan intentionally does not prescribe a package manager.
 
 - sign in with a school-issued account;
 - browse resources available to all users;
+- see booked times across those resources for a chosen day;
 - create reservation requests;
 - view upcoming and previous reservations; and
 - cancel eligible reservations.
@@ -239,6 +242,7 @@ src/app/
 │   ├── staff/                    # enabled in the Resource Staff milestone
 │   └── (requester)/              # shared Faculty and Student guard; no URL segment
 │       ├── resources/            # enabled in the Faculty milestone
+│       ├── schedule/             # booked times only; no requester names or purposes
 │       └── reservations/         # enabled in the Faculty milestone
 ├── api/
 ├── layout.tsx
@@ -364,15 +368,13 @@ COMPLETED
 
 Status changes must follow explicitly allowed transitions and produce a history record.
 
-### Equipment Conditions
+### Equipment Notes
 
-```text
-GOOD
-FAIR
-DAMAGED
-```
+Staff record free-text notes at checkout and return for equipment reservations. A fixed condition scale is not used.
 
-Condition is recorded at checkout and return for equipment reservations.
+### Completion
+
+Resource Staff mark a reservation `COMPLETED` once it has ended (`CONFIRMED`) or the equipment has been returned (`RETURNED`). A pending request whose time has passed can only be rejected.
 
 ---
 
@@ -725,7 +727,7 @@ Do not expose other role workflows until this milestone is reviewed and accepted
 - approval and rejection with reasons;
 - operational reservation views;
 - equipment checkout and return; and
-- checkout and return condition recording.
+- checkout and return notes.
 
 ### Milestone 3 — Faculty
 
@@ -932,7 +934,7 @@ LabReserve is complete when:
 ✓ resource visibility follows access scope
 ✓ eligible users can create and cancel reservations
 ✓ pending requests can be approved or rejected
-✓ equipment checkout and return preserve condition records
+✓ equipment checkout and return preserve notes
 ✓ conflicting active reservations are prevented at the database level
 ✓ every reservation state change produces history
 ✓ authorization is enforced on the server

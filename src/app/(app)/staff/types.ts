@@ -10,6 +10,8 @@ export type ReservationRow = {
   purpose: string
   status: ReservationStatus
   rejectionReason: string | null
+  ended: boolean
+  canComplete: boolean
 }
 
 export type EquipmentRow = ReservationRow
