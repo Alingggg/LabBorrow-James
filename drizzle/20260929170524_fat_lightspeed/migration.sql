@@ -77,18 +77,6 @@ ALTER TABLE "maintenance_periods" ADD CONSTRAINT "maintenance_periods_no_overlap
 	"resource_id" WITH =,
 	tstzrange("start_at", "end_at", '[)') WITH &&
 );--> statement-breakpoint
-INSERT INTO "facility_settings" ("id", "institution_name", "timezone")
-VALUES ('default', 'LabReserve Campus', 'Asia/Manila')
-ON CONFLICT ("id") DO NOTHING;--> statement-breakpoint
-INSERT INTO "operating_hours" ("day_of_week", "open_time", "close_time", "is_closed") VALUES
-	(0, NULL, NULL, true),
-	(1, '08:00', '17:00', false),
-	(2, '08:00', '17:00', false),
-	(3, '08:00', '17:00', false),
-	(4, '08:00', '17:00', false),
-	(5, '08:00', '17:00', false),
-	(6, '08:00', '12:00', false)
-ON CONFLICT ("day_of_week") DO NOTHING;--> statement-breakpoint
 CREATE FUNCTION "enforce_initial_administrator_registration"()
 RETURNS trigger
 LANGUAGE plpgsql
