@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { PageHeader } from "@/components/PageHeader"
+import { PageSkeleton, Skeleton } from "@/components/Skeletons"
 import { ScheduleDatePicker } from "@/components/ScheduleDatePicker"
 import { HourAxis, Timeline, TimelineLegend } from "@/components/Timeline"
 import { formatSchoolDay, shiftSchoolDate } from "@/lib/school-time"
@@ -114,5 +115,40 @@ export function ScheduleView({
         </p>
       )}
     </div>
+  )
+}
+
+export function ScheduleSkeleton() {
+  return (
+    <PageSkeleton>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <Skeleton className="h-8 w-32" />
+        <div className="flex items-center gap-2">
+          <Skeleton className="size-9" />
+          <Skeleton className="h-9 w-44" />
+          <Skeleton className="size-9" />
+        </div>
+      </div>
+      <Skeleton className="h-5 w-64" />
+      {[4, 3].map((rows, section) => (
+        <section key={section} className="space-y-3">
+          <Skeleton className="h-7 w-28" />
+          <div className="rounded-xl border bg-card">
+            <div className={`${rowGrid} border-b pt-3 pb-2`}>
+              <span className="max-sm:hidden" />
+              <Skeleton className="h-4" />
+            </div>
+            <ul className="divide-y">
+              {Array.from({ length: rows }, (_, index) => (
+                <li key={index} className={`${rowGrid} py-3`}>
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-9" />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ))}
+    </PageSkeleton>
   )
 }
