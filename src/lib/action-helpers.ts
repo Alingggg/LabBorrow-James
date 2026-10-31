@@ -1,4 +1,4 @@
-import type { ZodType } from "zod"
+import { z, type ZodType } from "zod"
 
 import { databaseErrorCode } from "@/lib/db-errors"
 import type { ActionResult } from "@/types/action-result"
@@ -16,7 +16,7 @@ export function validate<T>(
       ok: false,
       code: "VALIDATION_ERROR",
       message: "Please correct the highlighted fields.",
-      fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+      fieldErrors: z.flattenError(parsed.error).fieldErrors as Record<string, string[]>,
     },
   }
 }
