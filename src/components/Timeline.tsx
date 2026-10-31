@@ -20,11 +20,6 @@ function hoursWithin(range: ScheduleHours) {
   return Array.from({ length: last - first + 1 }, (_, index) => first + index)
 }
 
-function describe(slot: ScheduleSlot) {
-  const status = slot.overdue ? "Overdue" : (statusLabels[slot.status] ?? slot.status)
-  return [slot.when, status, slot.requesterName, slot.purpose].filter(Boolean).join(" · ")
-}
-
 export function HourAxis({ range }: { range: ScheduleHours }) {
   const hours = hoursWithin(range)
   return (
@@ -75,7 +70,8 @@ export function Timeline({ range, slots }: { range: ScheduleHours; slots: Schedu
             left: `calc(${position(range, slot.from)} + 1px)`,
             width: `calc(${position(range, slot.to)} - ${position(range, slot.from)} - 2px)`,
           }
-          const description = describe(slot)
+          const status = slot.overdue ? "Overdue" : (statusLabels[slot.status] ?? slot.status)
+          const description = [slot.when, status, slot.requesterName, slot.purpose].filter(Boolean).join(" · ")
           return (
             <li
               key={slot.id}

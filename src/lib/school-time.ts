@@ -44,16 +44,14 @@ export function shiftSchoolDate(date: string, days: number) {
   return utcToLocalParts(addDays(new TZDate(start, SCHOOL_TIMEZONE), days)).date
 }
 
-export function schoolDayBounds(date: string) {
-  const next = shiftSchoolDate(date, 1)
-  const start = localPartsToUtc(date, "00:00")
-  const end = next ? localPartsToUtc(next, "00:00") : null
-  return start && end ? { start, end, weekday: utcToLocalParts(start).weekday } : null
-}
-
 // Falls back to today for missing or malformed ?date= values
 export function resolveSchoolDate(raw: unknown) {
-  return typeof raw === "string" && schoolDayBounds(raw) ? raw : todayInSchool()
+  const date = typeof raw === "string" && localPartsToUtc(raw, "00:00") ? raw : todayInSchool()
+  const start = localPartsToUtc(date, "00:00")
+  const next = shiftSchoolDate(date, 1)
+  const end = next ? localPartsToUtc(next, "00:00") : null
+  if (!start || !end) throw new Error("Could not resolve the school day.")
+  return { date, bounds: { start, end, weekday: utcToLocalParts(start).weekday } }
 }
 
 export function formatSchoolDay(date: string) {
@@ -80,16 +78,8 @@ export function formatSchoolTime(instant: Date) {
   return format(new TZDate(instant, SCHOOL_TIMEZONE), TIME_FORMAT)
 }
 
-export function formatSchoolTimeRange(start: Date, end: Date) {
-  return `${format(new TZDate(start, SCHOOL_TIMEZONE), TIME_FORMAT)} – ${format(new TZDate(end, SCHOOL_TIMEZONE), TIME_FORMAT)}`
-}
-
 const DATE_TIME_FORMAT = "MMM d, yyyy, h:mm a"
 const TIME_FORMAT = "h:mm a"
-
-export function formatSchoolDateTime(instant: Date) {
-  return format(new TZDate(instant, SCHOOL_TIMEZONE), DATE_TIME_FORMAT)
-}
 
 export function formatSchoolRange(start: Date, end: Date) {
   const localStart = new TZDate(start, SCHOOL_TIMEZONE)

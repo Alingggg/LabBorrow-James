@@ -12,6 +12,7 @@ import {
   user,
 } from "@/db/schema"
 import type { ActionResult } from "@/types/action-result"
+import type { Failure } from "@/lib/action-helpers"
 import { databaseErrorCode } from "@/lib/db-errors"
 import { canTransition, type ReservationStatus } from "@/lib/reservation-status"
 import { formatMaxDuration, scopesForRole } from "@/lib/resources"
@@ -29,8 +30,6 @@ export type NewReservation = {
   endTime: string // school-local HH:mm
   purpose: string
 }
-
-type Failure = Extract<ActionResult<never>, { ok: false }>
 
 const fail = (
   code: Failure["code"],

@@ -7,7 +7,7 @@ import { db } from "@/db"
 import { reservations, resources, user } from "@/db/schema"
 import { getOperatingHours } from "@/data/settings"
 import { activeReservationStatuses } from "@/lib/reservation-status"
-import { clockToMinutes, formatSchoolTime, formatSchoolTimeRange } from "@/lib/school-time"
+import { clockToMinutes, formatSchoolTime } from "@/lib/school-time"
 import type { DaySchedule, ScheduleSlot } from "@/types/schedule"
 
 export type SchoolDay = { start: Date; end: Date; weekday: number }
@@ -56,7 +56,7 @@ export async function getDaySchedule(
     const slots = slotsByResource.get(resourceId) ?? []
     slots.push({
       ...slot,
-      when: formatSchoolTimeRange(startAt, endAt),
+      when: `${formatSchoolTime(startAt)} – ${formatSchoolTime(endAt)}`,
       startLabel: formatSchoolTime(startAt),
       startMinute: minuteOfDay(startAt),
       endMinute: minuteOfDay(endAt),
