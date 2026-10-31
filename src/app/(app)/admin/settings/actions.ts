@@ -33,7 +33,7 @@ export async function updateFacilityAction(
         set: { ...input, updatedAt: new Date() },
       })
 
-    revalidatePath("/admin")
+    revalidatePath("/admin/overview")
     revalidatePath("/admin/settings")
     return { ok: true, data: input }
   } catch (error) {

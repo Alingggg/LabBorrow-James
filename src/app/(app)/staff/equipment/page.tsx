@@ -2,10 +2,10 @@ import type { Metadata } from "next"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { PageHeader } from "@/components/PageHeader"
-import { CheckoutButton, ReturnButton } from "../_components/EquipmentActions"
-import { CompleteButton } from "../_components/ReservationActions"
-import { getEquipmentWork } from "../data"
-import type { EquipmentRow } from "../types"
+import { CheckoutButton, ReturnButton } from "./_components/EquipmentActions"
+import { CompleteButton } from "../_components/CompleteButton"
+import { getEquipmentWork } from "./data"
+import type { EquipmentRow } from "./types"
 
 export const metadata: Metadata = { title: "Equipment" }
 

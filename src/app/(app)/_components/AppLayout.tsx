@@ -26,17 +26,17 @@ import { roleOptions } from "@/lib/role-options"
 import { homeFor, isRequesterRole, type UserRole } from "@/lib/roles"
 import { cn } from "@/lib/utils"
 
-type NavItem = { href: string; label: string; icon: typeof Users; exact?: boolean }
+type NavItem = { href: string; label: string; icon: typeof Users }
 
 const adminNavigation: NavItem[] = [
-  { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
+  { href: "/admin/overview", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/resources", label: "Resources", icon: Microscope },
   { href: "/admin/users", label: "Users & roles", icon: Users },
   { href: "/admin/settings", label: "School settings", icon: Settings },
 ]
 
 const staffNavigation: NavItem[] = [
-  { href: "/staff", label: "Pending requests", icon: ClipboardCheck, exact: true },
+  { href: "/staff/pending-requests", label: "Pending requests", icon: ClipboardCheck },
   { href: "/staff/schedule", label: "Schedule", icon: CalendarClock },
   { href: "/staff/reservations", label: "Reservations", icon: CalendarDays },
   { href: "/staff/equipment", label: "Equipment", icon: PackageCheck },
@@ -88,9 +88,7 @@ function Navigation({ role, onNavigate }: { role: UserRole; onNavigate?: () => v
             <p className="px-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">{group.label}</p>
           )}
           {group.items.map((item) => {
-            const active = item.exact
-              ? pathname === item.href
-              : pathname === item.href || pathname.startsWith(`${item.href}/`)
+            const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
             const Icon = item.icon
             return (
               <Link

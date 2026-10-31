@@ -7,9 +7,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { LinkTabs } from "@/components/LinkTabs"
 import { PageHeader } from "@/components/PageHeader"
 import { ReservationStatusBadge } from "@/components/ReservationStatusBadge"
-import { CancelButton, CompleteButton } from "../_components/ReservationActions"
-import { ReservationFilters } from "../_components/ReservationFilters"
-import { getReservations } from "../data"
+import { CompleteButton } from "../_components/CompleteButton"
+import { CancelButton } from "./_components/CancelButton"
+import { ReservationFilters } from "./_components/ReservationFilters"
+import { getReservations } from "./data"
 
 export const metadata: Metadata = { title: "Reservations" }
 

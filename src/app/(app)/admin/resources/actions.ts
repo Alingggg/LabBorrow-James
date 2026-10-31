@@ -33,7 +33,7 @@ export async function saveResourceAction(
       return { ok: false, code: "NOT_FOUND", message: "Resource not found." }
     }
 
-    revalidatePath("/admin")
+    revalidatePath("/admin/overview")
     revalidatePath("/admin/resources")
     revalidatePath("/resources", "layout")
     return { ok: true, data: record }

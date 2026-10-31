@@ -7,36 +7,7 @@ import { toast } from "sonner"
 
 import { ReasonSheet } from "@/components/ReasonSheet"
 import { Button } from "@/components/ui/button"
-import {
-  approveReservationAction,
-  cancelReservationAction,
-  completeReservationAction,
-  rejectReservationAction,
-} from "../actions"
-
-export function CompleteButton({ reservationId }: { reservationId: string }) {
-  const router = useRouter()
-  const [pending, setPending] = useState(false)
-
-  async function complete() {
-    setPending(true)
-    const result = await completeReservationAction({ reservationId })
-    setPending(false)
-    if (!result.ok) {
-      toast.error(result.message)
-      return
-    }
-    toast.success("Reservation completed.")
-    router.refresh()
-  }
-
-  return (
-    <Button size="sm" variant="outline" onClick={complete} disabled={pending}>
-      {pending && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-      Complete
-    </Button>
-  )
-}
+import { approveReservationAction, rejectReservationAction } from "../actions"
 
 export function ApproveButton({ reservationId }: { reservationId: string }) {
   const router = useRouter()
@@ -72,20 +43,6 @@ export function RejectButton({ reservationId }: { reservationId: string }) {
       submitLabel="Reject request"
       successMessage="Request rejected."
       onSubmit={(reason) => rejectReservationAction({ reservationId, reason })}
-    />
-  )
-}
-
-export function CancelButton({ reservationId }: { reservationId: string }) {
-  return (
-    <ReasonSheet
-      trigger={<Button size="sm" variant="outline">Cancel</Button>}
-      title="Cancel reservation"
-      label="Reason (optional)"
-      required={false}
-      submitLabel="Cancel reservation"
-      successMessage="Reservation cancelled."
-      onSubmit={(reason) => cancelReservationAction({ reservationId, reason })}
     />
   )
 }

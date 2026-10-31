@@ -13,10 +13,3 @@ export type ReservationRow = {
   ended: boolean
   canComplete: boolean
 }
-
-export type EquipmentRow = ReservationRow
-
-export type BookingFormData = {
-  users: { id: string; name: string; email: string }[]
-  resources: { id: string; name: string; type: ResourceType }[]
-}

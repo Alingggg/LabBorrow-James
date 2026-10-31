@@ -3,8 +3,8 @@ import Link from "next/link"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { PageHeader } from "@/components/PageHeader"
-import { BookingForm } from "../../_components/BookingForm"
-import { getBookingFormData } from "../../data"
+import { BookingForm } from "../_components/BookingForm"
+import { getBookingFormData } from "../data"
 
 export const metadata: Metadata = { title: "New reservation" }
 

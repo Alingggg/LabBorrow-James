@@ -83,7 +83,7 @@ The approved validation workflow is targeted manual verification plus linting, T
 
 ## Administrator routes
 
-- `/admin` — system overview
+- `/admin/overview` — system overview
 - `/admin/resources` — resource catalog management
 - `/admin/resources/new` — resource creation
 - `/admin/resources/[resourceId]/edit` — resource editing

@@ -28,7 +28,7 @@ export async function createUserAction(
 
     const created = await createUser(parsed.data)
 
-    revalidatePath("/admin")
+    revalidatePath("/admin/overview")
     revalidatePath("/admin/users")
     return { ok: true, data: created }
   } catch (error) {
@@ -86,7 +86,7 @@ export async function updateUserRoleAction(
     )
     if (failure) return failure
 
-    revalidatePath("/admin")
+    revalidatePath("/admin/overview")
     revalidatePath("/admin/users")
     return { ok: true, data: input }
   } catch (error) {

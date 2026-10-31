@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 
 import { ScheduleView } from "@/components/ScheduleView"
 import { resolveSchoolDate, todayInSchool } from "@/lib/school-time"
-import { getStaffSchedule } from "../data"
+import { getStaffSchedule } from "./data"
 
 export const metadata: Metadata = { title: "Schedule" }
 

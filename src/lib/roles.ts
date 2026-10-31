@@ -17,8 +17,8 @@ export function isRequesterRole(role: UserRole) {
 }
 
 export function homeFor(role: UserRole) {
-  if (role === "ADMIN") return "/admin"
-  if (role === "RESOURCE_STAFF") return "/staff"
+  if (role === "ADMIN") return "/admin/overview"
+  if (role === "RESOURCE_STAFF") return "/staff/pending-requests"
   if (isRequesterRole(role)) return "/resources"
   return null
 }
