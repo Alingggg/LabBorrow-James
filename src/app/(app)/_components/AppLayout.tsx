@@ -114,6 +114,28 @@ function Navigation({ role, onNavigate }: { role: UserRole; onNavigate?: () => v
   )
 }
 
+function UserFooter({ user }: { user: SessionUser }) {
+  return (
+    <div className="border-t p-4">
+      <div className="flex items-center gap-3">
+        <Avatar><AvatarFallback>
+          {user.name
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((part) => part[0]?.toUpperCase())
+            .join("")}
+        </AvatarFallback></Avatar>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium">{user.name}</p>
+          <Badge variant="outline" className="mt-1">{roleLabels[user.role] ?? user.role}</Badge>
+        </div>
+        <SignOutButton compact />
+      </div>
+    </div>
+  )
+}
+
 export function AppLayout({
   children,
   user,
@@ -134,23 +156,7 @@ export function AppLayout({
           <Brand institutionName={institutionName} href={home} />
         </div>
         <div className="flex-1 overflow-y-auto px-3 py-5"><Navigation role={role} /></div>
-        <div className="border-t p-4">
-          <div className="flex items-center gap-3">
-            <Avatar><AvatarFallback>
-              {user.name
-                .split(/\s+/)
-                .filter(Boolean)
-                .slice(0, 2)
-                .map((part) => part[0]?.toUpperCase())
-                .join("")}
-            </AvatarFallback></Avatar>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{user.name}</p>
-              <Badge variant="outline" className="mt-1">{roleLabels[user.role] ?? user.role}</Badge>
-            </div>
-            <SignOutButton compact />
-          </div>
-        </div>
+        <UserFooter user={user} />
       </aside>
 
       <div className="lg:pl-64">
@@ -169,10 +175,11 @@ export function AppLayout({
       </div>
 
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-[290px] p-0">
+        <SheetContent side="left" className="w-[290px] gap-0 p-0">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           <div className="border-b px-5 py-4"><Brand institutionName={institutionName} href={home} /></div>
-          <div className="px-3 py-5"><Navigation role={role} onNavigate={() => setMobileOpen(false)} /></div>
+          <div className="flex-1 overflow-y-auto px-3 py-5"><Navigation role={role} onNavigate={() => setMobileOpen(false)} /></div>
+          <UserFooter user={user} />
         </SheetContent>
       </Sheet>
     </div>
