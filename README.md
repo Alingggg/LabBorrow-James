@@ -18,7 +18,7 @@ Student, Faculty, Resource Staff, reservation, approval, checkout, and return wo
 
 ## Stack
 
-- Bun 1.3
+- Node.js 22
 - Next.js 16 App Router and React 19
 - TypeScript and Tailwind CSS 4
 - shadcn/ui on Base UI and Lucide icons
@@ -32,26 +32,26 @@ Student, Faculty, Resource Staff, reservation, approval, checkout, and return wo
 2. Install dependencies and start PostgreSQL:
 
    ```bash
-   bun install
+   npm install
    docker compose up -d
    ```
 
 3. Apply the migrations:
 
    ```bash
-   bun run db:migrate
+   npm run db:migrate
    ```
 
 4. Start the application:
 
    ```bash
-   bun run dev
+   npm run dev
    ```
 
 5. Create the first Administrator (choose your own credentials; the password needs at least 8 characters):
 
    ```bash
-   ADMIN_NAME="Your Name" ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=change-me-please bun run create-admin
+   ADMIN_NAME="Your Name" ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=change-me-please npm run create-admin
    ```
 
 6. Sign in at [http://localhost:3000/login](http://localhost:3000/login). Further accounts are created from `/admin/users`.
@@ -71,12 +71,12 @@ Do not commit `.env` or production credentials.
 ## Commands
 
 ```bash
-bun run dev                  # start the development server
-bun run lint                 # run ESLint
-bun run typecheck            # generate Next.js route types and check TypeScript
-bun run build                # create a production build
-bun run db:generate          # generate a Drizzle migration
-bun run db:migrate           # apply pending migrations
+npm run dev                  # start the development server
+npm run lint                 # run ESLint
+npm run typecheck            # generate Next.js route types and check TypeScript
+npm run build                # create a production build
+npm run db:generate          # generate a Drizzle migration
+npm run db:migrate           # apply pending migrations
 ```
 
 The approved validation workflow is targeted manual verification plus linting, TypeScript checking, and a production build. Automated test suites and CI are outside the initial project scope.

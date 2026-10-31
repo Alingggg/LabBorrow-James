@@ -1,4 +1,4 @@
-// Usage: bun run seed:reservations (run seed:resources first; skips bookings that already exist)
+// Usage: npm run seed:reservations (run seed:resources first; skips bookings that already exist)
 import { addDays, addHours, addMinutes, subDays } from "date-fns"
 import { and, eq, inArray } from "drizzle-orm"
 

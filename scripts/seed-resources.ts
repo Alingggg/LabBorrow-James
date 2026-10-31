@@ -1,4 +1,4 @@
-// Usage: bun run seed:resources (skips names that already exist)
+// Usage: npm run seed:resources (skips names that already exist)
 import { db } from "@/db"
 import { resources } from "@/db/schema"
 

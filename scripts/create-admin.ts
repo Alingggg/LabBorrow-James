@@ -1,4 +1,4 @@
-// Usage: ADMIN_NAME="Jane" ADMIN_EMAIL=jane@example.com ADMIN_PASSWORD=... bun run create-admin
+// Usage: ADMIN_NAME="Jane" ADMIN_EMAIL=jane@example.com ADMIN_PASSWORD=... npm run create-admin
 import { createUser } from "@/db/create-user"
 import { db } from "@/db"
 

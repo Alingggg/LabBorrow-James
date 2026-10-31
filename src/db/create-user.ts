@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { account, user } from "@/db/schema";
 import type { UserRole } from "@/lib/roles";
 
-// Outside data/ so the Bun create-admin script can import it (no server-only).
+// Outside data/ so the create-admin script can import it (no server-only).
 export type NewUser = {
   name: string;
   email: string;
