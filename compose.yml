@@ -15,5 +15,20 @@ services:
       timeout: 5s
       retries: 5
 
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/labreserve
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   db-data:
