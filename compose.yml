@@ -24,11 +24,13 @@ services:
       - 3000:3000
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/.next
+      - node-modules:/app/node_modules
+      - next-cache:/app/.next
     depends_on:
       db:
         condition: service_healthy
 
 volumes:
   db-data:
+  node-modules:
+  next-cache:
