@@ -11,7 +11,7 @@ import { activeReservationStatuses } from "@/lib/reservation-status"
 import type { ResourceType } from "@/lib/resources"
 import type { UserRole } from "@/lib/roles"
 import { formatSchoolRange } from "@/lib/school-time"
-import type { BookedSlot, CatalogResource } from "./types"
+import type { BookedSlot, Resource } from "./types"
 
 const selection = {
   id: resources.id,
@@ -22,7 +22,7 @@ const selection = {
   maxReservationMinutes: resources.maxReservationMinutes,
 }
 
-export async function listCatalog(type: ResourceType): Promise<CatalogResource[]> {
+export async function getResources(type: ResourceType): Promise<Resource[]> {
   const currentUser = await requireRequester()
   return db
     .select(selection)
@@ -31,9 +31,9 @@ export async function listCatalog(type: ResourceType): Promise<CatalogResource[]
     .orderBy(asc(resources.name))
 }
 
-export async function getCatalogResource(
+export async function getResource(
   resourceId: string
-): Promise<{ resource: CatalogResource; booked: BookedSlot[] } | null> {
+): Promise<(Resource & { booked: BookedSlot[] }) | null> {
   const currentUser = await requireRequester()
   if (!z.uuid().safeParse(resourceId).success) return null
 
@@ -63,7 +63,7 @@ export async function getCatalogResource(
     .limit(50)
 
   return {
-    resource,
+    ...resource,
     booked: booked.map(({ id, startAt, endAt, status }) => ({
       id,
       status,

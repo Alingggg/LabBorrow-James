@@ -4,12 +4,12 @@ import { Badge } from "@/components/ui/badge"
 import { PageHeader } from "@/components/PageHeader"
 import { ApproveButton, RejectButton } from "./_components/ReservationActions"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { listPendingReservations } from "./data"
+import { getPendingReservations } from "./data"
 
 export const metadata: Metadata = { title: "Pending requests" }
 
 export default async function PendingRequestsPage() {
-  const requests = await listPendingReservations()
+  const requests = await getPendingReservations()
   return (
     <div className="space-y-7">
       <PageHeader title="Pending requests" />

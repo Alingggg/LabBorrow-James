@@ -8,7 +8,7 @@ import { LinkTabs } from "@/components/LinkTabs"
 import { PageHeader } from "@/components/PageHeader"
 import { ReservationStatusBadge } from "@/components/ReservationStatusBadge"
 import { CancelReservationButton } from "./_components/CancelReservationButton"
-import { listMyReservations } from "./data"
+import { getMyReservations } from "./data"
 
 export const metadata: Metadata = { title: "My reservations" }
 
@@ -20,7 +20,7 @@ const tabs = [
 export default async function MyReservationsPage({ searchParams }: PageProps<"/reservations">) {
   const { view: rawView } = await searchParams
   const view = rawView === "previous" ? "previous" : "upcoming"
-  const rows = await listMyReservations(view)
+  const rows = await getMyReservations(view)
 
   return (
     <div className="space-y-7">

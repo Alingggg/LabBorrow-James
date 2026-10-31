@@ -8,16 +8,15 @@ import { PageHeader } from "@/components/PageHeader"
 import { ReservationStatusBadge } from "@/components/ReservationStatusBadge"
 import { getOperatingHours } from "@/data/settings"
 import { accessScopeLabels, formatMaxDuration } from "@/lib/resources"
-import { getCatalogResource } from "../data"
+import { getResource } from "../data"
 import { RequestForm } from "./_components/RequestForm"
 
 export const metadata: Metadata = { title: "Request resource" }
 
 export default async function ResourcePage({ params }: PageProps<"/resources/[resourceId]">) {
   const { resourceId } = await params
-  const [found, hours] = await Promise.all([getCatalogResource(resourceId), getOperatingHours()])
-  if (!found) notFound()
-  const { resource, booked } = found
+  const [resource, hours] = await Promise.all([getResource(resourceId), getOperatingHours()])
+  if (!resource) notFound()
 
   return (
     <div className="space-y-6">
@@ -40,9 +39,9 @@ export default async function ResourcePage({ params }: PageProps<"/resources/[re
           <Card>
             <CardHeader><CardTitle>Booked</CardTitle></CardHeader>
             <CardContent>
-              {booked.length ? (
+              {resource.booked.length ? (
                 <ul className="space-y-2 text-sm">
-                  {booked.map((slot) => (
+                  {resource.booked.map((slot) => (
                     <li key={slot.id} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-lg border px-3 py-2">
                       <span>{slot.when}</span>
                       <ReservationStatusBadge status={slot.status} />

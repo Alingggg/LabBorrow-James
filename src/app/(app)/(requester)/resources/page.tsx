@@ -6,7 +6,7 @@ import { Card, CardAction, CardDescription, CardHeader, CardTitle } from "@/comp
 import { LinkTabs } from "@/components/LinkTabs"
 import { PageHeader } from "@/components/PageHeader"
 import { accessScopeLabels } from "@/lib/resources"
-import { listCatalog } from "./data"
+import { getResources } from "./data"
 
 export const metadata: Metadata = { title: "Resources" }
 
@@ -18,7 +18,7 @@ const tabs = [
 export default async function ResourcesPage({ searchParams }: PageProps<"/resources">) {
   const { type } = await searchParams
   const tab = type === "equipment" ? "equipment" : "rooms"
-  const items = await listCatalog(tab === "equipment" ? "EQUIPMENT" : "ROOM")
+  const items = await getResources(tab === "equipment" ? "EQUIPMENT" : "ROOM")
 
   return (
     <div className="space-y-7">

@@ -6,7 +6,7 @@ import { db } from "@/db"
 import { user } from "@/db/schema"
 import { requireAdmin } from "@/data/auth"
 
-export async function listUsers() {
+export async function getUsers() {
   const currentUser = await requireAdmin()
   const users = await db
     .select({

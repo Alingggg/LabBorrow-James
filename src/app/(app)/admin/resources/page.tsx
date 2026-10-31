@@ -7,12 +7,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PageHeader } from "@/components/PageHeader"
 import { accessScopeLabels } from "@/lib/resources"
 import { ResourceStatusBadge } from "./_components/ResourceStatusBadge"
-import { listResources } from "./data"
+import { getResources } from "./data"
 
 export const metadata: Metadata = { title: "Manage resources" }
 
 export default async function AdminResourcesPage() {
-  const records = await listResources()
+  const records = await getResources()
   return (
     <div className="space-y-7">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

@@ -18,7 +18,7 @@ const selection = {
   maxReservationMinutes: resources.maxReservationMinutes,
 }
 
-export async function listResources(): Promise<ResourceSummary[]> {
+export async function getResources(): Promise<ResourceSummary[]> {
   await requireAdmin()
   return db
     .select(selection)

@@ -10,7 +10,7 @@ import { activeReservationStatuses } from "@/lib/reservation-status"
 import { formatSchoolRange } from "@/lib/school-time"
 import type { MyReservationRow, ReservationView } from "./types"
 
-export async function listMyReservations(view: ReservationView): Promise<MyReservationRow[]> {
+export async function getMyReservations(view: ReservationView): Promise<MyReservationRow[]> {
   const currentUser = await requireRequester()
   const upcoming = view === "upcoming"
   const rows = await db

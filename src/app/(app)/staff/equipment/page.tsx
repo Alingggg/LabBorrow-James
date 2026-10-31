@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PageHeader } from "@/components/PageHeader"
 import { CheckoutButton, ReturnButton } from "../_components/EquipmentActions"
 import { CompleteButton } from "../_components/ReservationActions"
-import { listEquipmentWork } from "../data"
+import { getEquipmentWork } from "../data"
 import type { EquipmentRow } from "../types"
 
 export const metadata: Metadata = { title: "Equipment" }
@@ -52,7 +52,7 @@ function EquipmentTable({
 }
 
 export default async function EquipmentPage() {
-  const { readyForCheckout, checkedOut } = await listEquipmentWork()
+  const { readyForCheckout, checkedOut } = await getEquipmentWork()
   return (
     <div className="space-y-7">
       <PageHeader title="Equipment" />

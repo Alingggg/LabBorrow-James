@@ -5,12 +5,12 @@ import { Table,TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/
 import { PageHeader } from "@/components/PageHeader"
 import { CreateUserSheet } from "./_components/CreateUserSheet"
 import { UserRoleForm } from "./_components/UserRoleForm"
-import { listUsers } from "./data"
+import { getUsers } from "./data"
 
 export const metadata: Metadata = { title: "Users and roles" }
 
 export default async function UsersPage() {
-  const { currentUser, users } = await listUsers()
+  const { currentUser, users } = await getUsers()
   return (
     <div className="space-y-7">
       <div className="flex items-center justify-between gap-4">

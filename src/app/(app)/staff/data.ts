@@ -38,7 +38,7 @@ function toRow({
   }
 }
 
-export async function listPendingReservations(): Promise<ReservationRow[]> {
+export async function getPendingReservations(): Promise<ReservationRow[]> {
   await requireStaff()
   const rows = await db
     .select(selection)
@@ -50,7 +50,7 @@ export async function listPendingReservations(): Promise<ReservationRow[]> {
   return rows.map(toRow)
 }
 
-export async function listReservations(rawFilters: {
+export async function getReservations(rawFilters: {
   type: ResourceType
   status?: string
   resourceId?: string
@@ -93,7 +93,7 @@ export async function listReservations(rawFilters: {
   }
 }
 
-export async function listEquipmentWork(): Promise<{
+export async function getEquipmentWork(): Promise<{
   readyForCheckout: EquipmentRow[]
   checkedOut: EquipmentRow[]
 }> {

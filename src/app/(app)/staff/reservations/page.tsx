@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/PageHeader"
 import { ReservationStatusBadge } from "@/components/ReservationStatusBadge"
 import { CancelButton, CompleteButton } from "../_components/ReservationActions"
 import { ReservationFilters } from "../_components/ReservationFilters"
-import { listReservations } from "../data"
+import { getReservations } from "../data"
 
 export const metadata: Metadata = { title: "Reservations" }
 
@@ -22,7 +22,7 @@ export default async function ReservationsPage({ searchParams }: PageProps<"/sta
   const params = await searchParams
   const single = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value)
   const tab = single(params.type) === "equipment" ? "equipment" : "rooms"
-  const { rows, filters, resourceOptions } = await listReservations({
+  const { rows, filters, resourceOptions } = await getReservations({
     type: tab === "equipment" ? "EQUIPMENT" : "ROOM",
     status: single(params.status),
     resourceId: single(params.resourceId),

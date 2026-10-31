@@ -1,7 +1,7 @@
 import type { resources } from "@/db/schema"
 import type { ReservationStatus } from "@/lib/reservation-status"
 
-export type CatalogResource = Pick<
+export type Resource = Pick<
   typeof resources.$inferSelect,
   "id" | "name" | "description" | "type" | "accessScope" | "maxReservationMinutes"
 >
