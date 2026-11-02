@@ -102,7 +102,7 @@ export const facilitySettings = snakeCase.table(
   {
     id: text().primaryKey().default("default"),
     institutionName: text()
-      .default("LabReserve Campus")
+      .default("LabBorrow James")
       .notNull(),
     email: text().default("").notNull(),
     phone: text().default("").notNull(),

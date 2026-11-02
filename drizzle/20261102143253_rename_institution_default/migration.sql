@@ -1,0 +1,1 @@
+ALTER TABLE "facility_settings" ALTER COLUMN "institution_name" SET DEFAULT 'LabBorrow James';

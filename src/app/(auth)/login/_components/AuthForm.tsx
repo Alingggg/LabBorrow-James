@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -76,7 +75,7 @@ export function AuthForm() {
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Microscope className="size-4" aria-hidden="true" />
           </span>
-          LabReserve
+          LabBorrow James
         </Link>
 
         <Card>
@@ -84,10 +83,6 @@ export function AuthForm() {
             <CardTitle>
               <h1 className="text-xl font-semibold">Welcome back</h1>
             </CardTitle>
-            <CardDescription>
-              Enter your details to sign in. Accounts are created by an
-              administrator.
-            </CardDescription>
           </CardHeader>
 
           <CardContent>

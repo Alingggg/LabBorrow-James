@@ -9,7 +9,7 @@ import type { OperatingHoursInput } from "./schemas"
 import type { FacilitySettingsDto } from "./types"
 
 const defaults: FacilitySettingsDto = {
-  institutionName: "LabReserve Campus",
+  institutionName: "LabBorrow James",
   email: "",
   phone: "",
   address: "",

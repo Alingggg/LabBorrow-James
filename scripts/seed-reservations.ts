@@ -9,14 +9,14 @@ import type { ReservationStatus } from "@/lib/reservation-status"
 import type { UserRole } from "@/lib/roles"
 import { localPartsToUtc, shiftSchoolDate, todayInSchool, utcToLocalParts } from "@/lib/school-time"
 
-const MOCK_PASSWORD = "labreserve123"
+const MOCK_PASSWORD = "labborrow123"
 
 const mockUsers: { name: string; email: string; role: UserRole }[] = [
-  { name: "Lea Mendoza", email: "lea.mendoza@labreserve.test", role: "FACULTY" },
-  { name: "Carlo Diaz", email: "carlo.diaz@labreserve.test", role: "FACULTY" },
-  { name: "Bea Lim", email: "bea.lim@labreserve.test", role: "STUDENT" },
-  { name: "Miguel Tan", email: "miguel.tan@labreserve.test", role: "STUDENT" },
-  { name: "Ella Garcia", email: "ella.garcia@labreserve.test", role: "STUDENT" },
+  { name: "Lea Mendoza", email: "lea.mendoza@labborrow.test", role: "FACULTY" },
+  { name: "Carlo Diaz", email: "carlo.diaz@labborrow.test", role: "FACULTY" },
+  { name: "Bea Lim", email: "bea.lim@labborrow.test", role: "STUDENT" },
+  { name: "Miguel Tan", email: "miguel.tan@labborrow.test", role: "STUDENT" },
+  { name: "Ella Garcia", email: "ella.garcia@labborrow.test", role: "STUDENT" },
 ]
 
 type Seed = {
@@ -150,8 +150,8 @@ for (const mock of mockUsers) {
 
 const users = await db.select({ id: user.id, email: user.email }).from(user)
 const userId = (localPart: string) => {
-  const found = users.find((item) => item.email === `${localPart}@labreserve.test`)
-  if (!found) throw new Error(`Missing user ${localPart}@labreserve.test`)
+  const found = users.find((item) => item.email === `${localPart}@labborrow.test`)
+  if (!found) throw new Error(`Missing user ${localPart}@labborrow.test`)
   return found.id
 }
 const resourceRows = await db

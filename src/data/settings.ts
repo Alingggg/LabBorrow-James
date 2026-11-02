@@ -6,7 +6,7 @@ import { db } from "@/db"
 import { facilitySettings, operatingHours } from "@/db/schema"
 import { formatClockRange, weekdayLabels } from "@/lib/school-time"
 
-const DEFAULT_INSTITUTION_NAME = "LabReserve Campus"
+const DEFAULT_INSTITUTION_NAME = "LabBorrow James"
 
 export async function getInstitutionName() {
   const [settings] = await db

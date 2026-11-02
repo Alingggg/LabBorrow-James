@@ -8,8 +8,8 @@ const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: {
-    default: "LabReserve",
-    template: "%s · LabReserve",
+    default: "LabBorrow James",
+    template: "%s · LabBorrow James",
   },
   description: "Reserve school laboratories, rooms, and equipment.",
 }

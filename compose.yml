@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: labreserve
+      POSTGRES_DB: labborrow
     ports:
       - 5432:5432
     volumes:
@@ -19,7 +19,7 @@ services:
     build: .
     env_file: .env
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/labreserve
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/labborrow
     ports:
       - 3000:3000
     volumes:

@@ -52,7 +52,7 @@ export async function updateUserRoleAction(
     const failure = await db.transaction(
       async (tx): Promise<ActionResult<never> | null> => {
         await tx.execute(
-          sql`select pg_advisory_xact_lock(hashtext('labreserve-admin-role-management'))`
+          sql`select pg_advisory_xact_lock(hashtext('labborrow-admin-role-management'))`
         )
         const [target] = await tx
           .select({ role: user.role })

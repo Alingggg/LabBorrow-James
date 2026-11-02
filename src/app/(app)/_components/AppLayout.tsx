@@ -64,6 +64,8 @@ const roleLabels: Record<string, string> = Object.fromEntries(
   roleOptions.map((option) => [option.value, option.label])
 )
 
+const APP_NAME = "LabBorrow James"
+
 function Brand({ institutionName, href }: { institutionName: string; href: string }) {
   return (
     <Link href={href} className="flex min-w-0 items-center gap-2.5">
@@ -71,8 +73,10 @@ function Brand({ institutionName, href }: { institutionName: string; href: strin
         <FlaskConical className="size-4.5" aria-hidden="true" />
       </span>
       <span className="min-w-0">
-        <span className="block text-sm font-semibold leading-none">LabReserve</span>
-        <span className="mt-1 block truncate text-xs text-muted-foreground">{institutionName}</span>
+        <span className="block text-sm font-semibold leading-none">{APP_NAME}</span>
+        {institutionName && institutionName !== APP_NAME && (
+          <span className="mt-1 block truncate text-xs text-muted-foreground">{institutionName}</span>
+        )}
       </span>
     </Link>
   )

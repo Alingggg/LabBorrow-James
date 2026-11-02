@@ -1,4 +1,4 @@
-# LabReserve
+# LabBorrow James
 
 My Next.js practice project.
 
